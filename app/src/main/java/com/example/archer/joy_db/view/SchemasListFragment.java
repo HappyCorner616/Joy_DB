@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.example.archer.joy_db.R;
 import com.example.archer.joy_db.model.Schema;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -53,6 +54,7 @@ public class SchemasListFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
 
         SchemasAdapter adapter = new SchemasAdapter(schemasList);
+        recyclerView.setItemViewCacheSize(adapter.getItemCount());
         recyclerView.setAdapter(adapter);
 
         /*int previousElementId = -ID_SHIFT;
@@ -94,40 +96,37 @@ public class SchemasListFragment extends Fragment {
             transaction.add(containerId, schemaFragment);
         }
         transaction.commit();
-
     }
 
     class SchemasAdapter extends RecyclerView.Adapter<SchemaViewHolder>{
 
         private List<Schema> list;
+        private List<View> buffer;
 
         public SchemasAdapter(List<Schema> list) {
             this.list = list;
+            buffer = new ArrayList<>();
         }
 
         @NonNull
         @Override
         public SchemaViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             View itemView = LayoutInflater.from(getContext()).inflate(R.layout.row_container, viewGroup, false);
-            View rowContainer = LayoutInflater.from(getContext()).inflate(R.layout.row_container, (ViewGroup) itemView, false);
-
             Log.d(MY_TAG, "id: " + (i + ID_SHIFT));
-
-            rowContainer.setId(i + ID_SHIFT);
-            ViewGroup.LayoutParams params = rowContainer.getLayoutParams();
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            rowContainer.setLayoutParams(params);
-
-            ((ViewGroup)itemView).addView(rowContainer);
-            return new SchemaViewHolder(itemView, rowContainer);
+            SchemaViewHolder schemaViewHolder = new SchemaViewHolder(itemView);
+            View container = schemaViewHolder.setContainerId(i + ID_SHIFT);
+            buffer.add(container);
+            Log.e(MY_TAG, "buffer size: " + buffer.size());
+            return schemaViewHolder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull SchemaViewHolder schemaViewHolder, int i) {
             Schema schema = schemasList.get(i);
-            //int id = i + ID_SHIFT;
-            int id = schemaViewHolder.getId();
-            Log.e(MY_TAG, "onBindViewHolder id: " + id);
+            int id = i + ID_SHIFT;
+            Log.e(MY_TAG, "before setContainerId: " + schemaViewHolder.getId());
+            View container = schemaViewHolder.setContainerId(id);
+            Log.e(MY_TAG, "after setContainerId: " + id);
             SchemaFragment schemaFragment = SchemaFragment.getNewInstance(schema);
             getChildFragmentManager().beginTransaction()
                     .replace(id, schemaFragment)
@@ -149,22 +148,28 @@ public class SchemasListFragment extends Fragment {
     class SchemaViewHolder extends RecyclerView.ViewHolder{
 
         private View rowContainer;
+        //private View itemView;
 
         public SchemaViewHolder(@NonNull View itemView) {
             super(itemView);
+            //this.itemView = itemView;
+            rowContainer = null;
         }
 
-        public SchemaViewHolder(@NonNull View itemView, View rowContainer) {
-            super(itemView);
-            this.rowContainer = rowContainer;
-        }
-
-        public void setContainerId(int id){
+        public View setContainerId(int id){
+            if(rowContainer == null){
+                rowContainer = LayoutInflater.from(getContext()).inflate(R.layout.row_container, (ViewGroup) itemView, false);
+                ViewGroup.LayoutParams params = rowContainer.getLayoutParams();
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                rowContainer.setLayoutParams(params);
+                ((ViewGroup)itemView).addView(rowContainer);
+            }
             rowContainer.setId(id);
+            return rowContainer;
         }
 
         public int getId(){
-            return rowContainer.getId();
+            return rowContainer == null ? -1 : rowContainer.getId();
         }
 
     }

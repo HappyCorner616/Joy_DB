@@ -45,4 +45,10 @@ public class SchemaFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public String toString() {
+        return "SchemaFragment{" +
+                "schema=" + schema.getName() +
+                '}';
+    }
 }

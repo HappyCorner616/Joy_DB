@@ -36,13 +36,14 @@ public class HttpProvider {
     }
 
     public List<Schema> getSchemas() throws IOException {
-        Call<Schemas> call = api.schemas();
+        /*Call<Schemas> call = api.schemas();
         Response<Schemas> response = call.execute();
         if(response.isSuccessful()){
             return response.body().getSchemas();
         }else{
             return new ArrayList<>();
-        }
+        }*/
+        return getTESTSchemas();
     }
 
     public Table getTable(String schemaName, String tableName, boolean filled) throws IOException {
@@ -55,5 +56,17 @@ public class HttpProvider {
         }
     }
 
+    // TEST
+    private static List<Schema> getTESTSchemas(){
+        List<Schema> list = new ArrayList<>();
+        list.add(new Schema("users"));
+        list.add(new Schema("people"));
+        list.add(new Schema("countries"));
+        list.add(new Schema("colors"));
+        list.add(new Schema("products"));
+        list.add(new Schema("dogs"));
+        list.add(new Schema("cats"));
+        return list;
+    }
 
 }
