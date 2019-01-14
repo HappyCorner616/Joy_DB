@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#99a0f5">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -16,20 +17,20 @@
         app:layout_constraintVertical_bias="0.0">
 
         <TextView
-            android:id="@+id/column_name"
+            android:id="@+id/row_property"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="column"
+            android:hint="property"
             android:text=""
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/value"
+            android:id="@+id/row_val"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:hint="value"
+            android:layout_weight="3"
+            android:hint="_empty_"
             android:text=""
             android:textSize="20sp" />
     </LinearLayout>

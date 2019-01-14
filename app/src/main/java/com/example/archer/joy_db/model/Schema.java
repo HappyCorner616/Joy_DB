@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 
-public class Schema {
+public class Schema implements Nameable{
     private String name;
     Map<String, Table> tables;
     
@@ -15,7 +15,8 @@ public class Schema {
         this.name = name;
         tables = new TreeMap<>();
     }
-    
+
+    @Override
     public String getName(){
         return name;
     }
@@ -33,5 +34,13 @@ public class Schema {
     
     public List<Table> getTables(){
         return new ArrayList<>(tables.values());
+    }
+
+    @Override
+    public String toString() {
+        return "Schema{" +
+                "name='" + name + '\'' +
+                ", tables=" + getTables() +
+                '}';
     }
 }

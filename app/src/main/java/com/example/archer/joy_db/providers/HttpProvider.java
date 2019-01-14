@@ -17,6 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HttpProvider {
 
     private static final String BASE_URL = "http://192.168.1.11:8080/Joy_DB/";
+    private static final String BASE_URL_MOBILE = "http://192.168.43.155:8080/Joy_DB/";
 
     private static HttpProvider instance = new HttpProvider();
 
@@ -25,7 +26,7 @@ public class HttpProvider {
 
     private HttpProvider(){
         api = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BASE_URL_MOBILE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build().create(Api.class);
         gson = new Gson();
@@ -36,14 +37,14 @@ public class HttpProvider {
     }
 
     public List<Schema> getSchemas() throws IOException {
-        /*Call<Schemas> call = api.schemas();
+        Call<Schemas> call = api.schemas();
         Response<Schemas> response = call.execute();
         if(response.isSuccessful()){
             return response.body().getSchemas();
         }else{
             return new ArrayList<>();
-        }*/
-        return getTESTSchemas();
+        }
+        //return getTESTSchemas();
     }
 
     public Table getTable(String schemaName, String tableName, boolean filled) throws IOException {

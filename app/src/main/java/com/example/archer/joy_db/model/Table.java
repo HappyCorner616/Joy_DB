@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Table {
+public class Table implements Nameable{
+
     private String schemaName;
     private String name;
     Map<String, Column> columns;
@@ -32,6 +33,7 @@ public class Table {
         this.rows = new ArrayList<>();
     }
 
+    @Override
     public String getName(){
         return name;
     }
@@ -90,4 +92,5 @@ public class Table {
         }
         columns.put(c.getName(), c);
     }
+
 }

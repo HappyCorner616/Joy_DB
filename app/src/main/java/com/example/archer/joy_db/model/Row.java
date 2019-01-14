@@ -48,6 +48,34 @@ public class Row {
         }
         return sb.toString();
     }
-   
-      
+
+    public List<Cell> getCells(){
+        List<Cell> list = new ArrayList<>();
+        for(Entry<Column, Object> entry : vals.entrySet()){
+            list.add(new Cell(entry.getKey().getName(), entry.getValue()));
+        }
+        return list;
+    }
+
+    public class Cell implements Propertyable{
+
+        private String property;
+        private Object val;
+
+        public Cell(String property, Object val) {
+            this.property = property;
+            this.val = val;
+        }
+
+        @Override
+        public String getProperty() {
+            return property;
+        }
+
+        @Override
+        public Object getPropertyVal() {
+            return val;
+        }
+    }
+
 }

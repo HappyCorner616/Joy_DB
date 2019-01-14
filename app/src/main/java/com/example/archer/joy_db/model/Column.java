@@ -6,7 +6,8 @@ import com.example.archer.joy_db.enums.SqlDataTypes;
 import java.util.Objects;
 
 
-public class Column implements Comparable<Column>{
+public class Column implements Comparable<Column>, Nameable, Propertyable{
+
     private String name;
     private SqlDataTypes type;
     private int position;
@@ -31,7 +32,8 @@ public class Column implements Comparable<Column>{
         this.name = name;
         this.type = type;
     }
-    
+
+    @Override
     public String getName(){
         return name;
     }
@@ -39,7 +41,7 @@ public class Column implements Comparable<Column>{
     public SqlDataTypes getType() {
         return type;
     }
-    
+
     public void setType(SqlDataTypes type){
         this.type = type;
     }
@@ -97,6 +99,15 @@ public class Column implements Comparable<Column>{
         }
         return res;
     }
-    
-    
+
+
+    @Override
+    public String getProperty() {
+        return type.toString();
+    }
+
+    @Override
+    public Object getPropertyVal() {
+        return name;
+    }
 }
