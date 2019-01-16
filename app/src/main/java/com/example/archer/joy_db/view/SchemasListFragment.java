@@ -48,7 +48,7 @@ public class SchemasListFragment extends Fragment implements NameableListAdapter
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.schemas_list, container, false);
+        View view = inflater.inflate(R.layout.list, container, false);
 
         recyclerView = view.findViewById(R.id.list);
 
@@ -71,6 +71,11 @@ public class SchemasListFragment extends Fragment implements NameableListAdapter
         if(listener != null){
             listener.openSchemaFragment(schema, this);
         }
+    }
+
+    @Override
+    public void onRowLongClick(int position) {
+        //Nothing to do
     }
 
     public interface SchemasListFragmentListener{

@@ -63,11 +63,21 @@ public class NameableListAdapter<T extends Nameable> extends RecyclerView.Adapte
                     }
                 }
             });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(list != null){
+                        listener.onRowLongClick(getAdapterPosition());
+                    }
+                    return false;
+                }
+            });
         }
     }
 
     public interface NameableListAdapterListener{
         void onRowClick(int position);
+        void onRowLongClick(int position);
     }
 
 }

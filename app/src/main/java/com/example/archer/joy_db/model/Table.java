@@ -44,7 +44,7 @@ public class Table implements Nameable{
 
     public List<Column> getColumns(){
         List<Column> list = new ArrayList<>(columns.values());
-        Collections.sort(list);
+        Collections.sort(list, new Column.PositionComparator());
         return list;
     }
 
@@ -68,19 +68,10 @@ public class Table implements Nameable{
         rows.clear();
     }
 
-    public void initializeColumns(Row row) throws Exception{
-        if(!emptyColumns()){
-            throw new Exception("Column already initialized");
-        }
-        for(Column c : row.columns()){
-            columns.put(c.getName(), c);
-        }
-    }
-
     public void addRow(Row row) throws Exception{
-        for(Column c : row.columns()){
-            if(!c.equals(columns.get(c.getName()))){
-                throw new Exception("Table '" + name + "' have not collumn '" + c.toString());
+        for(String columnName : row.columns()){
+            if(!columns.containsKey(columnName)){
+                throw new Exception("Table '" + name + "' have not collumn '" + columnName + "'");
             }
         }
         rows.add(row);

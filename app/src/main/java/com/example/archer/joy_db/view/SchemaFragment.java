@@ -95,6 +95,14 @@ public class SchemaFragment extends Fragment implements NameableListAdapter.Name
     public void onRowClick(int position) {
         Table table = schema.getTables().get(position);
         if(listener != null){
+            listener.openTableDataFragment(table, this);
+        }
+    }
+
+    @Override
+    public void onRowLongClick(int position) {
+        Table table = schema.getTables().get(position);
+        if(listener != null){
             listener.openTableFragment(table, this);
         }
     }
@@ -109,6 +117,6 @@ public class SchemaFragment extends Fragment implements NameableListAdapter.Name
 
     public interface SchemaFragmentListener extends FragmentRestorable{
         void openTableFragment(Table table, Fragment previousFragment);
-
+        void openTableDataFragment(Table table, Fragment previousFragment);
     }
 }

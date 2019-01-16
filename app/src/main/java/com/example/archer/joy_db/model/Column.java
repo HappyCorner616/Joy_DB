@@ -3,10 +3,11 @@ package com.example.archer.joy_db.model;
 
 import com.example.archer.joy_db.enums.SqlDataTypes;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 
-public class Column implements Comparable<Column>, Nameable, Propertyable{
+public class Column implements Nameable, Propertyable{
 
     private String name;
     private SqlDataTypes type;
@@ -53,23 +54,19 @@ public class Column implements Comparable<Column>, Nameable, Propertyable{
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Column other = (Column) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (this.type != other.type) {
-            return false;
-        }
-        return true;
+       if(this == obj){
+           return true;
+       }
+       if(obj == null){
+           return false;
+       }
+       if(obj instanceof Column){
+           Column other = (Column) obj;
+           if(this.name.equalsIgnoreCase(other.name)){
+               return true;
+           }
+       }
+       return false;
     }
     
     public static SqlDataTypes mapType(String typeName){
@@ -92,16 +89,6 @@ public class Column implements Comparable<Column>, Nameable, Propertyable{
     }
 
     @Override
-    public int compareTo(Column o) {
-        int res = position - o.position;
-        if(res == 0){
-            res = name.compareTo(o.name);
-        }
-        return res;
-    }
-
-
-    @Override
     public String getProperty() {
         return type.toString();
     }
@@ -110,4 +97,13 @@ public class Column implements Comparable<Column>, Nameable, Propertyable{
     public Object getPropertyVal() {
         return name;
     }
+
+    public static class PositionComparator implements Comparator<Column>{
+
+        @Override
+        public int compare(Column o1, Column o2) {
+            return o1.position - o2.position;
+        }
+    }
+
 }
