@@ -26,22 +26,15 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
     private TextView label;
     private RecyclerView recyclerView;
     private TableDataFragmentListener listener;
-    private Fragment previousFragment;
 
-    public static TableDataFragment getNewInstance(Table table, Fragment previousFragment){
+    public static TableDataFragment getNewInstance(Table table){
         TableDataFragment tableDataFragment = new TableDataFragment();
         tableDataFragment.table = table;
-        tableDataFragment.previousFragment = previousFragment;
         return tableDataFragment;
     }
 
     public void setListener(TableDataFragmentListener listener) {
         this.listener = listener;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -67,14 +60,6 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
         return view;
     }
 
-    @Override
-    public void onDestroy() {
-        if(listener != null){
-            listener.restoreFragment(previousFragment);
-        }
-        super.onDestroy();
-    }
-
     public void fillTableRow(Table filledTable){
         table = filledTable;
         Log.d(MY_TAG, "fillTableRow: " + table.getRows());
@@ -87,7 +72,7 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
     public void onRowClick(int position) {
         Row row = table.getRows().get(position);
         if(listener != null){
-            listener.openRowDataFragment(row, this);
+            listener.openRowDataFragment(row);
         }
     }
 
@@ -96,9 +81,9 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
 
     }
 
-    public interface TableDataFragmentListener extends FragmentRestorable{
+    public interface TableDataFragmentListener{
         void fillTableRow(Table table, TableDataFragment tableDataFragment);
-        void openRowDataFragment(Row row, Fragment previousFragment);
+        void openRowDataFragment(Row row);
     }
 
 }

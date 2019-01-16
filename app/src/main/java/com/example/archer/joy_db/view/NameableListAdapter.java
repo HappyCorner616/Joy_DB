@@ -28,7 +28,7 @@ public class NameableListAdapter<T extends Nameable> extends RecyclerView.Adapte
     @NonNull
     @Override
     public NameableViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_container, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row, viewGroup, false);
         return new NameableViewHolder(view);
     }
 
@@ -38,15 +38,10 @@ public class NameableListAdapter<T extends Nameable> extends RecyclerView.Adapte
         nameableViewHolder.rowTxt.setText(item.getName());
     }
 
-    public T getItem(int position){
-        return list.get(position);
-    }
-
     @Override
     public int getItemCount() {
         return list.size();
     }
-
 
     public class NameableViewHolder extends RecyclerView.ViewHolder{
 

@@ -40,11 +40,6 @@ public class SchemasListFragment extends Fragment implements NameableListAdapter
         this.listener = listener;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,7 +64,7 @@ public class SchemasListFragment extends Fragment implements NameableListAdapter
     public void onRowClick(int position) {
         Schema schema = schemasList.get(position);
         if(listener != null){
-            listener.openSchemaFragment(schema, this);
+            listener.openSchemaFragment(schema);
         }
     }
 
@@ -79,6 +74,6 @@ public class SchemasListFragment extends Fragment implements NameableListAdapter
     }
 
     public interface SchemasListFragmentListener{
-        void openSchemaFragment(Schema schema, Fragment previousFragment);
+        void openSchemaFragment(Schema schema);
     }
 }

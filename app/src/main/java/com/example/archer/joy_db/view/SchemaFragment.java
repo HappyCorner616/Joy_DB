@@ -26,7 +26,6 @@ public class SchemaFragment extends Fragment implements NameableListAdapter.Name
 
     private TextView label;
     private RecyclerView recyclerView;
-    private Fragment previousFragment;
     SchemaFragmentListener listener;
 
     private Schema schema;
@@ -37,20 +36,8 @@ public class SchemaFragment extends Fragment implements NameableListAdapter.Name
         return schemaFragment;
     }
 
-    public static SchemaFragment getNewInstance(Schema schema, Fragment previousFragment){
-        SchemaFragment schemaFragment = new SchemaFragment();
-        schemaFragment.schema = schema;
-        schemaFragment.previousFragment = previousFragment;
-        return schemaFragment;
-    }
-
     public void setListener(SchemaFragmentListener listener) {
         this.listener = listener;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -78,12 +65,6 @@ public class SchemaFragment extends Fragment implements NameableListAdapter.Name
         return view;
     }
 
-    public Fragment getPreviousFragment() {
-        return previousFragment;
-    }
-
-
-
     @Override
     public String toString() {
         return "SchemaFragment{" +
@@ -95,7 +76,7 @@ public class SchemaFragment extends Fragment implements NameableListAdapter.Name
     public void onRowClick(int position) {
         Table table = schema.getTables().get(position);
         if(listener != null){
-            listener.openTableDataFragment(table, this);
+            listener.openTableDataFragment(table);
         }
     }
 
@@ -103,20 +84,12 @@ public class SchemaFragment extends Fragment implements NameableListAdapter.Name
     public void onRowLongClick(int position) {
         Table table = schema.getTables().get(position);
         if(listener != null){
-            listener.openTableFragment(table, this);
+            listener.openTableFragment(table);
         }
     }
 
-    @Override
-    public void onDestroy() {
-        if(listener != null){
-            listener.restoreFragment(previousFragment);
-        }
-        super.onDestroy();
-    }
-
-    public interface SchemaFragmentListener extends FragmentRestorable{
-        void openTableFragment(Table table, Fragment previousFragment);
-        void openTableDataFragment(Table table, Fragment previousFragment);
+    public interface SchemaFragmentListener{
+        void openTableFragment(Table table);
+        void openTableDataFragment(Table table);
     }
 }

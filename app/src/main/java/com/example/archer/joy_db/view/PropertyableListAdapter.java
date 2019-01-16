@@ -23,7 +23,7 @@ public class PropertyableListAdapter<T extends Propertyable> extends RecyclerVie
     @NonNull
     @Override
     public PropertyableListAdapter.PropertyableViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.propertyable_row, viewGroup, false);
         return new PropertyableViewHolder(view);
     }
 

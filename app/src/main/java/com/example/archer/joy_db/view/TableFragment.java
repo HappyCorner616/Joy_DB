@@ -21,7 +21,6 @@ public class TableFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView label;
     private TableFragmentListener listener;
-    private Fragment previousFragment;
     private Table table;
 
     public static TableFragment getNewInstance(Table table){
@@ -29,20 +28,9 @@ public class TableFragment extends Fragment {
         tableFragment.table = table;
         return tableFragment;
     }
-    public static TableFragment getNewInstance(Table table, Fragment previousFragment){
-        TableFragment tableFragment = new TableFragment();
-        tableFragment.table = table;
-        tableFragment.previousFragment = previousFragment;
-        return tableFragment;
-    }
 
     public void setListener(TableFragmentListener listener) {
         this.listener = listener;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -67,14 +55,6 @@ public class TableFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onDestroy() {
-        if(listener != null){
-            listener.restoreFragment(previousFragment);
-        }
-        super.onDestroy();
-    }
-
-    public interface TableFragmentListener extends FragmentRestorable{
+    public interface TableFragmentListener{
     }
 }

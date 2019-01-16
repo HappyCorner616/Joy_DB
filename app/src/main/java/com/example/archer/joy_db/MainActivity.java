@@ -69,51 +69,34 @@ public class MainActivity extends AppCompatActivity implements SchemasListFragme
     }
 
     @Override
-    public void openSchemaFragment(Schema schema, Fragment previousFragment) {
-        SchemaFragment schemaFragment = SchemaFragment.getNewInstance(schema, previousFragment);
+    public void openSchemaFragment(Schema schema) {
+        SchemaFragment schemaFragment = SchemaFragment.getNewInstance(schema);
         schemaFragment.setListener(this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if(previousFragment != null){
-            transaction.detach(previousFragment);
-        }
         transaction.add(R.id.container, schemaFragment)
             .addToBackStack("SCHEMA_" + schema.getName())
             .commit();
     }
 
     @Override
-    public void openTableFragment(Table table, Fragment previousFragment) {
-        TableFragment tableFragment = TableFragment.getNewInstance(table, previousFragment);
+    public void openTableFragment(Table table) {
+        TableFragment tableFragment = TableFragment.getNewInstance(table);
         tableFragment.setListener(this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if(previousFragment != null){
-            transaction.detach(previousFragment);
-        }
+
         transaction.add(R.id.container, tableFragment)
                 .addToBackStack("TABLE_" + table.getName())
                 .commit();
     }
 
     @Override
-    public void openTableDataFragment(Table table, Fragment previousFragment) {
-        TableDataFragment tableDataFragment = TableDataFragment.getNewInstance(table, previousFragment);
+    public void openTableDataFragment(Table table) {
+        TableDataFragment tableDataFragment = TableDataFragment.getNewInstance(table);
         tableDataFragment.setListener(this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if(previousFragment != null){
-            transaction.detach(previousFragment);
-        }
         transaction.add(R.id.container, tableDataFragment)
                 .addToBackStack("FILLED_TABLE_" + table.getName())
                 .commit();
-    }
-
-    @Override
-    public void restoreFragment(Fragment fragment) {
-        if(fragment != null){
-            getSupportFragmentManager().beginTransaction()
-                    .attach(fragment)
-                    .commit();
-        }
     }
 
     @Override
@@ -122,13 +105,10 @@ public class MainActivity extends AppCompatActivity implements SchemasListFragme
     }
 
     @Override
-    public void openRowDataFragment(Row row, Fragment previousFragment) {
-        RowDataFragment rowDataFragment = RowDataFragment.getNewInstance(row, previousFragment);
+    public void openRowDataFragment(Row row) {
+        RowDataFragment rowDataFragment = RowDataFragment.getNewInstance(row);
         rowDataFragment.setListener(this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if(previousFragment != null){
-            transaction.detach(previousFragment);
-        }
         transaction.add(R.id.container, rowDataFragment)
                 .addToBackStack("ROW_DATA")
                 .commit();

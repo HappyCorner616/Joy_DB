@@ -18,13 +18,11 @@ public class RowDataFragment extends Fragment {
 
     private Row row;
     private RecyclerView recyclerView;
-    private Fragment prevoiusFragment;
     private RowDataFragmentListener listener;
 
-    public static RowDataFragment getNewInstance(Row row, Fragment previousFragment){
+    public static RowDataFragment getNewInstance(Row row){
         RowDataFragment rowDataFragment = new RowDataFragment();
         rowDataFragment.row = row;
-        rowDataFragment.prevoiusFragment = previousFragment;
         return rowDataFragment;
     }
 
@@ -51,15 +49,7 @@ public class RowDataFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onDestroy() {
-        if(listener != null){
-            listener.restoreFragment(prevoiusFragment);
-        }
-        super.onDestroy();
-    }
-
-    public interface RowDataFragmentListener extends FragmentRestorable{
+    public interface RowDataFragmentListener{
     }
 
 }
