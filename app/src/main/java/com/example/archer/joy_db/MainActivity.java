@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements SchemasListFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.d(MY_TAG, "Main activity onCreate");
+        //Log.d(MY_TAG, "Main activity onCreate");
 
         waitingFrame = findViewById(R.id.waiting_frame);
 
