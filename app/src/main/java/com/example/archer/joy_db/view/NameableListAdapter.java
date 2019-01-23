@@ -46,14 +46,18 @@ public class NameableListAdapter<T extends Nameable> extends RecyclerView.Adapte
     public class NameableViewHolder extends RecyclerView.ViewHolder{
 
         TextView rowTxt;
+        boolean longClick;
 
         public NameableViewHolder(@NonNull View itemView) {
             super(itemView);
             rowTxt = itemView.findViewById(R.id.row_txt);
+            longClick = false;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(listener != null){
+                    if(longClick){
+                        longClick = false;
+                    }else if(listener != null){
                         listener.onRowClick(getAdapterPosition());
                     }
                 }
@@ -62,6 +66,7 @@ public class NameableListAdapter<T extends Nameable> extends RecyclerView.Adapte
                 @Override
                 public boolean onLongClick(View v) {
                     if(list != null){
+                        longClick = true;
                         listener.onRowLongClick(getAdapterPosition());
                     }
                     return false;

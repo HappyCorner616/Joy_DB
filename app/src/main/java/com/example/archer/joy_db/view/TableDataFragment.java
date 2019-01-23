@@ -1,9 +1,12 @@
 package com.example.archer.joy_db.view;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.archer.joy_db.MainActivity;
 import com.example.archer.joy_db.R;
 import com.example.archer.joy_db.model.Row;
 import com.example.archer.joy_db.model.Table;
+import com.example.archer.joy_db.providers.HttpProvider;
 
 import static com.example.archer.joy_db.App.MY_TAG;
 
@@ -25,7 +30,6 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
     private Table table;
     private TextView label;
     private RecyclerView recyclerView;
-    private TableDataFragmentListener listener;
 
     public static TableDataFragment getNewInstance(Table table){
         TableDataFragment tableDataFragment = new TableDataFragment();
@@ -33,8 +37,10 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
         return tableDataFragment;
     }
 
-    public void setListener(TableDataFragmentListener listener) {
-        this.listener = listener;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Nullable
@@ -53,8 +59,8 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), manager.getOrientation());
         recyclerView.addItemDecoration(divider);
 
-        if(listener != null){
-            listener.fillTableRow(table, this);
+        if(table != null){
+            new FillTableTask(table, this).execute();
         }
 
         return view;
@@ -71,9 +77,12 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
     @Override
     public void onRowClick(int position) {
         Row row = table.getRows().get(position);
-        if(listener != null){
-            listener.openRowDataFragment(row);
-        }
+        Log.d(MY_TAG, "openRowDataFragment: ");
+        RowDataFragment rowDataFragment = RowDataFragment.getNewInstance(row);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, rowDataFragment)
+                .addToBackStack("ROW_DATA")
+                .commit();
     }
 
     @Override
@@ -81,9 +90,43 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
 
     }
 
-    public interface TableDataFragmentListener{
-        void fillTableRow(Table table, TableDataFragment tableDataFragment);
-        void openRowDataFragment(Row row);
+    class FillTableTask extends AsyncTask<Void, Void, String> {
+
+        private Table table;
+        private boolean isSuccessful;
+        private TableDataFragment tableDataFragment;
+
+        public FillTableTask(Table table, TableDataFragment tableDataFragment) {
+            this.table = table;
+            this.tableDataFragment = tableDataFragment;
+            isSuccessful = true;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            ((MainActivity)getActivity()).setWaitingMode();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            try{
+                table = HttpProvider.getInstance().getTable(table.getSchemaName(), table.getName(), true);
+                return "Done";
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            ((MainActivity)getActivity()).desetWaitingMode();
+            if(isSuccessful){
+                tableDataFragment.fillTableRow(table);
+            }else{
+                ((MainActivity)getActivity()).showError(s);
+            }
+        }
     }
 
 }

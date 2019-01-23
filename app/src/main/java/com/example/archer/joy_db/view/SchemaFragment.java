@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +27,6 @@ public class SchemaFragment extends Fragment implements NameableListAdapter.Name
 
     private TextView label;
     private RecyclerView recyclerView;
-    SchemaFragmentListener listener;
 
     private Schema schema;
 
@@ -36,8 +36,10 @@ public class SchemaFragment extends Fragment implements NameableListAdapter.Name
         return schemaFragment;
     }
 
-    public void setListener(SchemaFragmentListener listener) {
-        this.listener = listener;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Nullable
@@ -75,21 +77,21 @@ public class SchemaFragment extends Fragment implements NameableListAdapter.Name
     @Override
     public void onRowClick(int position) {
         Table table = schema.getTables().get(position);
-        if(listener != null){
-            listener.openTableDataFragment(table);
-        }
+        TableDataFragment tableDataFragment = TableDataFragment.getNewInstance(table);
+        getFragmentManager().beginTransaction()
+                .add(R.id.list_container, tableDataFragment)
+                .addToBackStack("FILLED_TABLE_" + table.getName())
+                .commit();
     }
 
     @Override
     public void onRowLongClick(int position) {
         Table table = schema.getTables().get(position);
-        if(listener != null){
-            listener.openTableFragment(table);
-        }
+        TableFragment tableFragment = TableFragment.getNewInstance(table);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, tableFragment)
+                .addToBackStack("TABLE_" + table.getName())
+                .commit();
     }
 
-    public interface SchemaFragmentListener{
-        void openTableFragment(Table table);
-        void openTableDataFragment(Table table);
-    }
 }

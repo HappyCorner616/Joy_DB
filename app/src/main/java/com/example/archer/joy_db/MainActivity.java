@@ -27,7 +27,7 @@ import java.util.List;
 
 import static com.example.archer.joy_db.App.MY_TAG;
 
-public class MainActivity extends AppCompatActivity implements SchemasListFragment.SchemasListFragmentListener, SchemaFragment.SchemaFragmentListener, TableFragment.TableFragmentListener, TableDataFragment.TableDataFragmentListener, RowDataFragment.RowDataFragmentListener {
+public class MainActivity extends AppCompatActivity {
 
     private FrameLayout waitingFrame;
 
@@ -40,15 +40,16 @@ public class MainActivity extends AppCompatActivity implements SchemasListFragme
 
         waitingFrame = findViewById(R.id.waiting_frame);
 
-        new GetSchemasTask().execute();
-
+        if(savedInstanceState == null){
+            new GetSchemasTask().execute();
+        }
     }
 
-    private void setWaitingMode(){
+    public void setWaitingMode(){
         waitingFrame.setVisibility(View.VISIBLE);
     }
 
-    private void desetWaitingMode(){
+    public void desetWaitingMode(){
         waitingFrame.setVisibility(View.GONE);
     }
 
@@ -61,56 +62,9 @@ public class MainActivity extends AppCompatActivity implements SchemasListFragme
 
     void startSchemasListFragment(List<Schema> list){
         SchemasListFragment schemasListFragment = SchemasListFragment.getNewInstance(list);
-        schemasListFragment.setListener(this);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, schemasListFragment)
+                .add(R.id.list_container, schemasListFragment)
                 //.addToBackStack("SCHEMAS_LIST")
-                .commit();
-    }
-
-    @Override
-    public void openSchemaFragment(Schema schema) {
-        SchemaFragment schemaFragment = SchemaFragment.getNewInstance(schema);
-        schemaFragment.setListener(this);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.container, schemaFragment)
-            .addToBackStack("SCHEMA_" + schema.getName())
-            .commit();
-    }
-
-    @Override
-    public void openTableFragment(Table table) {
-        TableFragment tableFragment = TableFragment.getNewInstance(table);
-        tableFragment.setListener(this);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        transaction.add(R.id.container, tableFragment)
-                .addToBackStack("TABLE_" + table.getName())
-                .commit();
-    }
-
-    @Override
-    public void openTableDataFragment(Table table) {
-        TableDataFragment tableDataFragment = TableDataFragment.getNewInstance(table);
-        tableDataFragment.setListener(this);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.container, tableDataFragment)
-                .addToBackStack("FILLED_TABLE_" + table.getName())
-                .commit();
-    }
-
-    @Override
-    public void fillTableRow(Table table, TableDataFragment tableDataFragment) {
-        new FillTableTask(table, tableDataFragment).execute();
-    }
-
-    @Override
-    public void openRowDataFragment(Row row) {
-        RowDataFragment rowDataFragment = RowDataFragment.getNewInstance(row);
-        rowDataFragment.setListener(this);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.container, rowDataFragment)
-                .addToBackStack("ROW_DATA")
                 .commit();
     }
 
@@ -134,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements SchemasListFragme
             try {
                 list = HttpProvider.getInstance().getSchemas();
                 return "Done";
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 isSuccessful = false;
                 return e.getMessage();
@@ -152,43 +106,6 @@ public class MainActivity extends AppCompatActivity implements SchemasListFragme
         }
     }
 
-    class FillTableTask extends AsyncTask<Void, Void, String>{
 
-        private Table table;
-        private boolean isSuccessful;
-        private TableDataFragment tableDataFragment;
-
-        public FillTableTask(Table table, TableDataFragment tableDataFragment) {
-            this.table = table;
-            this.tableDataFragment = tableDataFragment;
-            isSuccessful = true;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            setWaitingMode();
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            try{
-                table = HttpProvider.getInstance().getTable(table.getSchemaName(), table.getName(), true);
-                return "Done";
-            } catch (IOException e) {
-                e.printStackTrace();
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            desetWaitingMode();
-            if(isSuccessful){
-                tableDataFragment.fillTableRow(table);
-            }else{
-                showError(s);
-            }
-        }
-    }
 
 }

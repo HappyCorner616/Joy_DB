@@ -6,35 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-    <FrameLayout
-        android:id="@+id/list_container"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:baselineAligned="false">
 
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/list_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
 
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        </FrameLayout>
 
-        <TextView
-            android:id="@+id/container_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="container"
-            android:layout_gravity="bottom|center"/>
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="#FFDBDB">
 
-    </FrameLayout>
+            <TextView
+                android:id="@+id/container_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="container"
+                android:layout_gravity="bottom|center"/>
+        </FrameLayout>
+
+
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/waiting_frame"

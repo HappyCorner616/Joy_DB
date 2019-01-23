@@ -1,5 +1,6 @@
 package com.example.archer.joy_db.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +18,12 @@ import com.example.archer.joy_db.R;
 import com.example.archer.joy_db.model.Propertyable;
 import com.example.archer.joy_db.model.Table;
 
+import static com.example.archer.joy_db.App.MY_TAG;
+
 public class TableFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private TextView label;
-    private TableFragmentListener listener;
     private Table table;
 
     public static TableFragment getNewInstance(Table table){
@@ -29,8 +32,10 @@ public class TableFragment extends Fragment {
         return tableFragment;
     }
 
-    public void setListener(TableFragmentListener listener) {
-        this.listener = listener;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Nullable
@@ -55,6 +60,4 @@ public class TableFragment extends Fragment {
         return view;
     }
 
-    public interface TableFragmentListener{
-    }
 }

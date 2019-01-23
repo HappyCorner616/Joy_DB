@@ -1,5 +1,6 @@
 package com.example.archer.joy_db.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +16,22 @@ import android.view.ViewGroup;
 import com.example.archer.joy_db.R;
 import com.example.archer.joy_db.model.Row;
 
+import static com.example.archer.joy_db.App.MY_TAG;
+
 public class RowDataFragment extends Fragment {
 
     private Row row;
     private RecyclerView recyclerView;
-    private RowDataFragmentListener listener;
 
     public static RowDataFragment getNewInstance(Row row){
         RowDataFragment rowDataFragment = new RowDataFragment();
         rowDataFragment.row = row;
         return rowDataFragment;
     }
-
-    public void setListener(RowDataFragmentListener listener) {
-        this.listener = listener;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Nullable
@@ -47,9 +51,6 @@ public class RowDataFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         return view;
-    }
-
-    public interface RowDataFragmentListener{
     }
 
 }
