@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.archer.joy_db.R;
+import com.example.archer.joy_db.model.Cell;
 import com.example.archer.joy_db.model.Row;
 
 import static com.example.archer.joy_db.App.MY_TAG;
@@ -47,7 +48,7 @@ public class RowDataFragment extends Fragment {
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), manager.getOrientation());
         recyclerView.addItemDecoration(divider);
 
-        PropertyableListAdapter<Row.Cell> adapter = new PropertyableListAdapter<>(row.getCells());
+        PropertyableListAdapter<Cell> adapter = new PropertyableListAdapter<>(row.getCells());
         recyclerView.setAdapter(adapter);
 
         return view;

@@ -2,102 +2,66 @@
 package com.example.archer.joy_db.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
 public class Row implements Nameable{
 
-    private Map<String, Object> vals;
+    private List<Cell> cells;
 
     public Row() {
-        vals = new TreeMap<>();
+        cells = new ArrayList<>();
     }
 
-    public Row(Map<String, Object> vals) {
-        this.vals = vals;
+    public Row(List<Cell> cells) {
+        this.cells = cells;
     }
 
-    public void addVal(String columnName, Object val){
-        vals.put(columnName, val);
+    public void addCell(Cell cell){
+        int index = cells.indexOf(cell);
+        if(index >= 0){
+            cells.set(index, cell);
+        }else{
+            cells.add(cell);
+        }
     }
 
-    public Object getVal(String columnName){
-        return vals.get(columnName);
-    }
-
-    public Map<String, Object> getVals(){
-        return vals;
-    }
-
-    public void setVals(Map<String, Object> vals){
-        this.vals = vals;
-    }
-
-    public List<Object> vals(){
-        return new ArrayList<>(vals.values());
-    }
-
-    public Set<String> columns(){
-        return vals.keySet();
+    public Set<Column> columns(){
+        Set<Column> columns = new HashSet<>();
+        for(Cell c : cells){
+            columns.add(c.getColumn());
+        }
+        return columns;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(Entry<String, Object> entry : vals.entrySet()){
-            sb.append("[" + entry.getKey() + ": " + entry.getValue() + "]");
+        for(Cell c : cells){
+            sb.append(c.getColumn().getName() + ": " + c.getPropertyVal() + "; ");
         }
         return sb.toString();
     }
 
     public List<Cell> getCells(){
-        List<Cell> list = new ArrayList<>();
-        for(Entry<String, Object> entry : vals.entrySet()){
-            list.add(new Cell(entry.getKey(), entry.getValue()));
-        }
+        List<Cell> list = new ArrayList<>(cells);
         return list;
     }
 
     @Override
     public String getName() {
-        Object idVal = vals.get("id");
-        if(idVal != null){
-            return "(id) " + idVal.toString();
-        }
-
-        Set<Entry<String, Object>> entrySet = vals.entrySet();
-        Iterator<Entry<String, Object>> iterator = entrySet.iterator();
-        if(iterator.hasNext()){
-            Entry<String, Object> entry = iterator.next();
-            return "(" + entry.getKey() + ") " + entry.getValue();
-        }else{
-            return "()";
-        }
+       if(cells.size() == 0){
+           return "()";
+       }
+       for(Cell c : cells){
+           if(c.getColumn().getName().equalsIgnoreCase("id")){
+               return "(id) " + c.getPropertyVal();
+           }
+       }
+       return "(" + cells.get(0).getColumn().getName() + ") " + cells.get(0).getPropertyVal();
     }
 
-    public class Cell implements Propertyable{
 
-        private String property;
-        private Object val;
-
-        public Cell(String property, Object val) {
-            this.property = property;
-            this.val = val;
-        }
-
-        @Override
-        public String getProperty() {
-            return property;
-        }
-
-        @Override
-        public Object getPropertyVal() {
-            return val;
-        }
-    }
 
 }

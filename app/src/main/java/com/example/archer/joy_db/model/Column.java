@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 
-public class Column implements Nameable, Propertyable{
+public class Column implements Nameable, Propertyable, Comparable<Column>{
 
     private String name;
     private SqlDataTypes type;
@@ -96,6 +96,11 @@ public class Column implements Nameable, Propertyable{
     @Override
     public Object getPropertyVal() {
         return name;
+    }
+
+    @Override
+    public int compareTo(Column o) {
+        return this.position - o.position;
     }
 
     public static class PositionComparator implements Comparator<Column>{

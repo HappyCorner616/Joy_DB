@@ -1,11 +1,15 @@
 
 package com.example.archer.joy_db.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import static com.example.archer.joy_db.App.MY_TAG;
 
 public class Table implements Nameable{
 
@@ -39,6 +43,7 @@ public class Table implements Nameable{
     }
 
     public List<Row> getRows(){
+        Log.d(MY_TAG, "returned: " + rows.size() + " rows");
         return rows;
     }
 
@@ -69,9 +74,9 @@ public class Table implements Nameable{
     }
 
     public void addRow(Row row) throws Exception{
-        for(String columnName : row.columns()){
-            if(!columns.containsKey(columnName)){
-                throw new Exception("Table '" + name + "' have not collumn '" + columnName + "'");
+        for(Column column : row.columns()){
+            if(!columns.containsKey(column.getName())){
+                throw new Exception("Table '" + name + "' have not collumn '" + column + "'");
             }
         }
         rows.add(row);

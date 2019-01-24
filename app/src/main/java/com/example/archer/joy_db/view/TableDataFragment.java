@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,7 +16,9 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.archer.joy_db.MainActivity;
 import com.example.archer.joy_db.R;
@@ -25,11 +28,12 @@ import com.example.archer.joy_db.providers.HttpProvider;
 
 import static com.example.archer.joy_db.App.MY_TAG;
 
-public class TableDataFragment extends Fragment implements NameableListAdapter.NameableListAdapterListener {
+public class TableDataFragment extends Fragment implements NameableListAdapter.NameableListAdapterListener, View.OnClickListener {
 
     private Table table;
     private TextView label;
     private RecyclerView recyclerView;
+    private ImageView addButton;
 
     public static TableDataFragment getNewInstance(Table table){
         TableDataFragment tableDataFragment = new TableDataFragment();
@@ -47,6 +51,20 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.labeled_list, container, false);
+
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.verticalBias = 0.95F;
+        params.horizontalBias = 0.9F;
+
+        View addButtonFrame = inflater.inflate(R.layout.add_button, container, false);
+        ((ViewGroup)view).addView(addButtonFrame, params);
+
+        addButton = addButtonFrame.findViewById(R.id.add_circle);
+        addButton.setOnClickListener(this);
 
         label = view.findViewById(R.id.title_txt);
         label.setText(table.getName());
@@ -88,6 +106,13 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
     @Override
     public void onRowLongClick(int position) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.add_circle){
+            Toast.makeText(getContext(), "add circle clicked!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     class FillTableTask extends AsyncTask<Void, Void, String> {
