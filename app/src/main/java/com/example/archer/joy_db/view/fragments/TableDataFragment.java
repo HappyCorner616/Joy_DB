@@ -1,30 +1,27 @@
-package com.example.archer.joy_db.view;
+package com.example.archer.joy_db.view.fragments;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.archer.joy_db.MainActivity;
 import com.example.archer.joy_db.R;
-import com.example.archer.joy_db.model.Row;
-import com.example.archer.joy_db.model.Table;
+import com.example.archer.joy_db.model.sql.Row;
+import com.example.archer.joy_db.model.sql.Table;
 import com.example.archer.joy_db.providers.HttpProvider;
+import com.example.archer.joy_db.view.recViewAdapters.NameableListAdapter;
 
 import static com.example.archer.joy_db.App.MY_TAG;
 
@@ -111,7 +108,12 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.add_circle){
-            Toast.makeText(getContext(), "add circle clicked!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "add circle clicked!", Toast.LENGTH_SHORT).show();
+            RowDataEditFragment rowDataEditFragment = RowDataEditFragment.getNewInstance(table.emptyRow(), table.getSchemaName(), table.getName(), true);
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, rowDataEditFragment)
+                    .addToBackStack("ROW_DATA_EDIT")
+                    .commit();
         }
     }
 

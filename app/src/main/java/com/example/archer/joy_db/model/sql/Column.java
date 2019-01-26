@@ -1,16 +1,20 @@
 
-package com.example.archer.joy_db.model;
+package com.example.archer.joy_db.model.sql;
 
-import com.example.archer.joy_db.enums.SqlDataTypes;
+import com.example.archer.joy_db.model.sql.enums.ColumnKeys;
+import com.example.archer.joy_db.model.sql.enums.SqlDataTypes;
+import com.example.archer.joy_db.model.interfaces.Nameable;
+import com.example.archer.joy_db.model.interfaces.Propertyable;
 
 import java.util.Comparator;
-import java.util.Objects;
 
 
 public class Column implements Nameable, Propertyable, Comparable<Column>{
 
     private String name;
     private SqlDataTypes type;
+    private ColumnKeys key;
+    private boolean autoIncrement;
     private int position;
     
     public Column(){
@@ -34,6 +38,14 @@ public class Column implements Nameable, Propertyable, Comparable<Column>{
         this.type = type;
     }
 
+    public Column(String name, SqlDataTypes type, ColumnKeys key, boolean autoIncrement, int position) {
+        this.name = name;
+        this.type = type;
+        this.key = key;
+        this.autoIncrement = autoIncrement;
+        this.position = position;
+    }
+
     @Override
     public String getName(){
         return name;
@@ -41,6 +53,14 @@ public class Column implements Nameable, Propertyable, Comparable<Column>{
 
     public SqlDataTypes getType() {
         return type;
+    }
+
+    public ColumnKeys getKey() {
+        return key;
+    }
+
+    public boolean isAutoIncrement() {
+        return autoIncrement;
     }
 
     public void setType(SqlDataTypes type){

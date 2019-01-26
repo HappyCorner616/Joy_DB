@@ -1,13 +1,14 @@
-package com.example.archer.joy_db.model;
+package com.example.archer.joy_db.model.sql;
+
+import com.example.archer.joy_db.model.interfaces.Nameable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 
-public class Schema implements Nameable{
+public class Schema implements Nameable {
     private String name;
     Map<String, Table> tables;
     

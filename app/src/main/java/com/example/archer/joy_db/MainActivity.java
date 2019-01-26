@@ -1,31 +1,18 @@
 package com.example.archer.joy_db;
 
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.example.archer.joy_db.model.Row;
-import com.example.archer.joy_db.model.Schema;
-import com.example.archer.joy_db.model.Schemas;
-import com.example.archer.joy_db.model.Table;
+import com.example.archer.joy_db.model.sql.Schema;
 import com.example.archer.joy_db.providers.HttpProvider;
-import com.example.archer.joy_db.view.RowDataFragment;
-import com.example.archer.joy_db.view.SchemaFragment;
-import com.example.archer.joy_db.view.SchemasListFragment;
-import com.example.archer.joy_db.view.TableDataFragment;
-import com.example.archer.joy_db.view.TableFragment;
+import com.example.archer.joy_db.view.fragments.SchemasListFragment;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.archer.joy_db.App.MY_TAG;
 
 public class MainActivity extends AppCompatActivity {
 

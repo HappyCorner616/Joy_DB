@@ -1,12 +1,14 @@
 
-package com.example.archer.joy_db.model;
+package com.example.archer.joy_db.model.sql;
+
+import com.example.archer.joy_db.model.interfaces.Nameable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Row implements Nameable{
+public class Row implements Nameable {
 
     private List<Cell> cells;
 
@@ -24,6 +26,15 @@ public class Row implements Nameable{
             cells.set(index, cell);
         }else{
             cells.add(cell);
+        }
+    }
+
+    public void setCellVal(String columnName, Object val){
+        for(Cell c : cells){
+            if(c.getColumn().getName().equalsIgnoreCase(columnName)){
+                c.setVal(val);
+                break;
+            }
         }
     }
 

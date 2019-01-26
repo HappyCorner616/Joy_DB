@@ -1,7 +1,9 @@
 
-package com.example.archer.joy_db.model;
+package com.example.archer.joy_db.model.sql;
 
 import android.util.Log;
+
+import com.example.archer.joy_db.model.interfaces.Nameable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +13,7 @@ import java.util.TreeMap;
 
 import static com.example.archer.joy_db.App.MY_TAG;
 
-public class Table implements Nameable{
+public class Table implements Nameable {
 
     private String schemaName;
     private String name;
@@ -80,6 +82,15 @@ public class Table implements Nameable{
             }
         }
         rows.add(row);
+    }
+
+    public Row emptyRow(){
+        List<Cell> cellList = new ArrayList<>();
+        for(Column c : columns.values()){
+            cellList.add(new Cell(c, ""));
+        }
+        Row row = new Row(cellList);
+        return row;
     }
 
     public void addColumn(Column c) throws Exception{

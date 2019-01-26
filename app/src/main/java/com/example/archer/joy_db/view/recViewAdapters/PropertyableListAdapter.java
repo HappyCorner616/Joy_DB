@@ -1,4 +1,4 @@
-package com.example.archer.joy_db.view;
+package com.example.archer.joy_db.view.recViewAdapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.archer.joy_db.R;
-import com.example.archer.joy_db.model.Propertyable;
+import com.example.archer.joy_db.model.interfaces.Propertyable;
 
 import java.util.List;
 

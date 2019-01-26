@@ -5,6 +5,8 @@
  */
 package com.example.archer.joy_db.model;
 
+import com.example.archer.joy_db.model.sql.Schema;
+
 import java.util.ArrayList;
 import java.util.List;
 

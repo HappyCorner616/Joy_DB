@@ -1,6 +1,5 @@
-package com.example.archer.joy_db.view;
+package com.example.archer.joy_db.view.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,27 +7,28 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.archer.joy_db.R;
-import com.example.archer.joy_db.model.Cell;
-import com.example.archer.joy_db.model.Row;
+import com.example.archer.joy_db.model.sql.Table;
+import com.example.archer.joy_db.view.recViewAdapters.ColumnListAdapter;
+import com.example.archer.joy_db.view.recViewAdapters.PropertyableListAdapter;
 
-import static com.example.archer.joy_db.App.MY_TAG;
+public class TableFragment extends Fragment {
 
-public class RowDataFragment extends Fragment {
-
-    private Row row;
     private RecyclerView recyclerView;
+    private TextView label;
+    private Table table;
 
-    public static RowDataFragment getNewInstance(Row row){
-        RowDataFragment rowDataFragment = new RowDataFragment();
-        rowDataFragment.row = row;
-        return rowDataFragment;
+    public static TableFragment getNewInstance(Table table){
+        TableFragment tableFragment = new TableFragment();
+        tableFragment.table = table;
+        return tableFragment;
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +38,12 @@ public class RowDataFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list, container, false);
+        View view = inflater.inflate(R.layout.column_list, container, false);
 
-        recyclerView = view.findViewById(R.id.list);
+        label = view.findViewById(R.id.table_title);
+        label.setText(table.getName());
+
+        recyclerView = view.findViewById(R.id.col_list);
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
@@ -48,7 +51,7 @@ public class RowDataFragment extends Fragment {
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), manager.getOrientation());
         recyclerView.addItemDecoration(divider);
 
-        PropertyableListAdapter<Cell> adapter = new PropertyableListAdapter<>(row.getCells());
+        ColumnListAdapter adapter = new ColumnListAdapter(table.getColumns());
         recyclerView.setAdapter(adapter);
 
         return view;

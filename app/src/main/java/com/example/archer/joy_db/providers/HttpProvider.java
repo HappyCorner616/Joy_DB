@@ -1,8 +1,11 @@
 package com.example.archer.joy_db.providers;
 
-import com.example.archer.joy_db.model.Schema;
+import com.example.archer.joy_db.model.ErrorResponse;
+import com.example.archer.joy_db.model.MessageResponse;
+import com.example.archer.joy_db.model.sql.Row;
+import com.example.archer.joy_db.model.sql.Schema;
 import com.example.archer.joy_db.model.Schemas;
-import com.example.archer.joy_db.model.Table;
+import com.example.archer.joy_db.model.sql.Table;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -18,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HttpProvider {
 
-    private static final String BASE_URL = "http://192.168.1.15:8080/Joy_DB/";
+    private static final String BASE_URL = "http://192.168.1.12:8080/Joy_DB/";
     private static final String BASE_URL_MOBILE = "http://192.168.43.155:8080/Joy_DB/";
 
     private static HttpProvider instance = new HttpProvider();
@@ -34,8 +37,8 @@ public class HttpProvider {
                 .build();
 
         api = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
                 //.baseUrl(BASE_URL_MOBILE)
-                .baseUrl(BASE_URL_MOBILE)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build().create(Api.class);
@@ -64,6 +67,28 @@ public class HttpProvider {
             return response.body();
         }else{
             throw new Exception(response.errorBody().string());
+        }
+    }
+
+    public String addRow(Row row, String schemaName, String tableName) throws IOException {
+        Call<MessageResponse> call = api.addRow(schemaName, tableName, row);
+        Response<MessageResponse> response = call.execute();
+        if(response.isSuccessful()){
+            return response.body().getMessage();
+        }else{
+            ErrorResponse error = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
+            return error.getError();
+        }
+    }
+
+    public String updateRow(Row row, String schemaName, String tableName) throws IOException {
+        Call<MessageResponse> call = api.updateRow(schemaName, tableName, row);
+        Response<MessageResponse> response = call.execute();
+        if(response.isSuccessful()){
+            return response.body().getMessage();
+        }else{
+            ErrorResponse error = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
+            return error.getError();
         }
     }
 
