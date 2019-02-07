@@ -38,8 +38,8 @@ public class HttpProvider {
                 .build();
 
         api = new Retrofit.Builder()
-                //.baseUrl(BASE_URL)
-                .baseUrl(BASE_URL_AWS)
+                .baseUrl(BASE_URL)
+                //.baseUrl(BASE_URL_AWS)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build().create(Api.class);
