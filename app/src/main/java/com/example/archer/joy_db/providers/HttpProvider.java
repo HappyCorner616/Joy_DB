@@ -23,6 +23,7 @@ public class HttpProvider {
 
     private static final String BASE_URL = "http://192.168.1.12:8080/Joy_DB_2/";
     private static final String BASE_URL_MOBILE = "http://192.168.43.155:8080/Joy_DB_2/";
+    private static final String BASE_URL_AWS = "http://54.173.29.106:8080/Joy_DB_2/";
 
     private static HttpProvider instance = new HttpProvider();
 
@@ -38,7 +39,7 @@ public class HttpProvider {
 
         api = new Retrofit.Builder()
                 //.baseUrl(BASE_URL)
-                .baseUrl(BASE_URL_MOBILE)
+                .baseUrl(BASE_URL_AWS)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build().create(Api.class);
