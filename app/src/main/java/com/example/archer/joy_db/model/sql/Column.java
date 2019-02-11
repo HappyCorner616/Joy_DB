@@ -1,70 +1,105 @@
 
 package com.example.archer.joy_db.model.sql;
 
-import com.example.archer.joy_db.model.sql.enums.ColumnKeys;
-import com.example.archer.joy_db.model.sql.enums.SqlDataTypes;
-import com.example.archer.joy_db.model.interfaces.Nameable;
-import com.example.archer.joy_db.model.interfaces.Propertyable;
-
 import java.util.Comparator;
 
 
-public class Column implements Nameable, Propertyable, Comparable<Column>{
+public class Column implements Comparable<Column>{
+
+    public static final int INT = 0;
+    public static final int DECIMAL = 1;
+    public static final int STRING = 2;
+    public static final int LOB = 3;
+    public static final int DATE = 4;
 
     private String name;
-    private SqlDataTypes type;
-    private ColumnKeys key;
-    private boolean autoIncrement;
     private int position;
-    
+    private int mainType;
+    private String type;
+    private boolean unsigned;
+    private int precision;
+    private int scale;
+    private String key;
+    private boolean autoIncrement;
+
     public Column(){
-        name = "_";
-        type = SqlDataTypes.VARCHAR;
-    }
-    
-    public Column(String name){
-        this.name = name;
-        type = SqlDataTypes.VARCHAR;
-    }
-    
-    public Column(String name, int position){
-        this.name = name;
-        this.position = position;
-        type = SqlDataTypes.VARCHAR;
-    }
-    
-    public Column(String name, SqlDataTypes type){
-        this.name = name;
-        this.type = type;
+        name = "_error_";
+        type = "_error_";
+        position = 0;
+        mainType = INT;
+        precision = 0;
+        scale = 0;
+        unsigned = false;
+        autoIncrement = false;
     }
 
-    public Column(String name, SqlDataTypes type, ColumnKeys key, boolean autoIncrement, int position) {
+    public Column(String name, String type, String key, boolean autoIncrement, int position, int numericPrecision, int numericScale) {
         this.name = name;
-        this.type = type;
+        this.type = type.split(" ")[0];
         this.key = key;
         this.autoIncrement = autoIncrement;
         this.position = position;
+        unsigned = type.contains("unsigned");
+        if(type.contains("blob") || type.contains("longtext")){
+            mainType = LOB;
+        }else if(type.contains("bit") || type.contains("int")){
+            mainType = INT;
+            precision = numericPrecision;
+        }else if(type.contains("decimal") || type.contains("float") || type.contains("double")){
+            mainType = DECIMAL;
+            precision = numericPrecision;
+            scale = numericScale;
+        }else if(type.contains("char") || type.contains("text") || type.contains("binary")){
+            mainType = STRING;
+        }else if(type.contains("date") || type.contains("time") || type.contains("year")){
+            mainType = DATE;
+        }
     }
 
-    @Override
-    public String getName(){
+    public int getMainType() {
+        return mainType;
+    }
+
+    public String getName() {
         return name;
     }
 
-    public SqlDataTypes getType() {
-        return type;
+    public boolean isInt(){
+        return mainType == INT;
     }
 
-    public ColumnKeys getKey() {
-        return key;
+    public boolean isDecimal(){
+        return mainType == DECIMAL;
     }
 
-    public boolean isAutoIncrement() {
+    public boolean isString(){
+        return mainType == STRING;
+    }
+
+    public boolean isLOB(){
+        return mainType == LOB;
+    }
+
+    public boolean isDate(){
+        return mainType == DATE;
+    }
+
+    public boolean autoIncrement(){
         return autoIncrement;
     }
 
-    public void setType(SqlDataTypes type){
-        this.type = type;
+    public String information(){
+        return type
+                + " " + (unsigned ? "unsigned" : "")
+                + " " + key;
+    }
+
+    public boolean isPK(){
+        return key.equals("PRI");
+    }
+
+    public boolean unsigned(){
+        return unsigned;
     }
 
     @Override
@@ -74,48 +109,19 @@ public class Column implements Nameable, Propertyable, Comparable<Column>{
 
     @Override
     public boolean equals(Object obj) {
-       if(this == obj){
-           return true;
-       }
-       if(obj == null){
-           return false;
-       }
-       if(obj instanceof Column){
-           Column other = (Column) obj;
-           if(this.name.equalsIgnoreCase(other.name)){
-               return true;
-           }
-       }
-       return false;
-    }
-    
-    public static SqlDataTypes mapType(String typeName){
-        switch(typeName){
-            case "shortint":
-                return SqlDataTypes.SHORTINT;
-            case "int":
-                return SqlDataTypes.INT;
-            case "biggint":
-                return SqlDataTypes.BIGINT;
-            case "varchar":
-                return SqlDataTypes.VARCHAR;
-            case "date":
-                return SqlDataTypes.DATE;
-            case "longblob":
-                return SqlDataTypes.BLOB;
-            default:
-                return SqlDataTypes.VARCHAR;
+        if(this == obj){
+            return true;
         }
-    }
-
-    @Override
-    public String getProperty() {
-        return type.toString();
-    }
-
-    @Override
-    public Object getPropertyVal() {
-        return name;
+        if(obj == null){
+            return false;
+        }
+        if(obj instanceof Column){
+            Column other = (Column) obj;
+            if(this.name.equalsIgnoreCase(other.name)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

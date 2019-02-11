@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.archer.joy_db.model.sql.Schema;
 import com.example.archer.joy_db.providers.HttpProvider;
@@ -47,7 +48,11 @@ public class MainActivity extends AppCompatActivity {
                 .create().show();
     }
 
-    void startSchemasListFragment(List<Schema> list){
+    public void showToast(String toast){
+        Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
+    }
+
+    void openSchemasListFragment(List<Schema> list){
         SchemasListFragment schemasListFragment = SchemasListFragment.getNewInstance(list);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.list_container, schemasListFragment)
@@ -86,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             desetWaitingMode();
             if(isSuccessful){
-                startSchemasListFragment(list);
+                openSchemasListFragment(list);
             }else{
                 showError(s);
             }

@@ -3,7 +3,6 @@ package com.example.archer.joy_db.view.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,22 +10,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.archer.joy_db.R;
-import com.example.archer.joy_db.model.sql.Row;
+import com.example.archer.joy_db.model.sql.Table;
 import com.example.archer.joy_db.view.MyColor;
-import com.example.archer.joy_db.view.recViewAdapters.RowDataAdapter;
+import com.example.archer.joy_db.view.recViewAdapters.TableInformationAdapter;
 
-public class RowDataFragment extends Fragment {
+public class TableInformationFragment extends Fragment {
 
-    private Row row;
+    private Table table;
     private MyColor bgColor, itemColor;
-    private RecyclerView cellsList;
-    private ConstraintLayout rowData;
+    private View tableInformation;
+    private TextView tableTitle;
+    private RecyclerView columnList;
 
-    public static RowDataFragment getNewInstance(Row row){
-        RowDataFragment fragment = new RowDataFragment();
-        fragment.row = row;
+    public static TableInformationFragment getNewInstance(Table table){
+        TableInformationFragment fragment = new TableInformationFragment();
+        fragment.table = table;
         fragment.bgColor = MyColor.whiteColor();
         fragment.itemColor = MyColor.whiteColor();
         return fragment;
@@ -46,21 +47,23 @@ public class RowDataFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.row_data, container, false);
+        View view = inflater.inflate(R.layout.table_information, container, false);
 
-        cellsList = view.findViewById(R.id.cells_list);
-        rowData = view.findViewById(R.id.row_data);
+        tableInformation = view.findViewById(R.id.table_information);
+        tableTitle = view.findViewById(R.id.table_title);
+        columnList = view.findViewById(R.id.column_list);
 
-        rowData.setBackgroundColor(bgColor.asInt());
+        tableInformation.setBackgroundColor(bgColor.asInt());
+        tableTitle.setText(table.getName());
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        cellsList.setLayoutManager(manager);
+        columnList.setLayoutManager(manager);
 
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), manager.getOrientation());
-        cellsList.addItemDecoration(divider);
+        columnList.addItemDecoration(divider);
 
-        RowDataAdapter adapter = new RowDataAdapter(row.getCells(), itemColor);
-        cellsList.setAdapter(adapter);
+        TableInformationAdapter adapter = new TableInformationAdapter(table.getColumns(), itemColor);
+        columnList.setAdapter(adapter);
 
         return view;
     }

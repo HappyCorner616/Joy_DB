@@ -21,21 +21,31 @@ import com.example.archer.joy_db.R;
 import com.example.archer.joy_db.model.sql.Row;
 import com.example.archer.joy_db.model.sql.Table;
 import com.example.archer.joy_db.providers.HttpProvider;
-import com.example.archer.joy_db.view.recViewAdapters.NameableListAdapter;
+import com.example.archer.joy_db.view.MyColor;
+import com.example.archer.joy_db.view.recViewAdapters.TableDataListAdapter;
 
 import static com.example.archer.joy_db.App.MY_TAG;
 
-public class TableDataFragment extends Fragment implements NameableListAdapter.NameableListAdapterListener, View.OnClickListener {
+public class TableDataFragment extends Fragment implements TableDataListAdapter.TableDataListAdapterListener, View.OnClickListener {
 
     private Table table;
-    private TextView label;
-    private RecyclerView recyclerView;
-    private ImageView addButton;
+    private View tableData;
+    private TextView tableTitle;
+    private RecyclerView dataList;
+    private ImageView addBtn;
+    private MyColor bgColor, itemColor;
 
     public static TableDataFragment getNewInstance(Table table){
         TableDataFragment tableDataFragment = new TableDataFragment();
         tableDataFragment.table = table;
+        tableDataFragment.bgColor = MyColor.whiteColor();
+        tableDataFragment.itemColor = tableDataFragment.bgColor.copy(20, MyColor.DARKER);
         return tableDataFragment;
+    }
+
+    public void setColors(MyColor schemaColor, MyColor tableColor){
+        this.bgColor = schemaColor;
+        this.itemColor = tableColor;
     }
 
     @Override
@@ -47,32 +57,22 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.labeled_list, container, false);
+        View view = inflater.inflate(R.layout.table_data, container, false);
 
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-        params.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
-        params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-        params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-        params.verticalBias = 0.95F;
-        params.horizontalBias = 0.9F;
+        tableData = view.findViewById(R.id.table_data);
+        tableTitle = view.findViewById(R.id.table_title);
+        dataList = view.findViewById(R.id.table_data_list);
+        addBtn = view.findViewById(R.id.add_btn);
 
-        View addButtonFrame = inflater.inflate(R.layout.add_button, container, false);
-        ((ViewGroup)view).addView(addButtonFrame, params);
+        tableTitle.setText(table.getName());
+        tableData.setBackgroundColor(bgColor.asInt());
+        addBtn.setOnClickListener(this);
 
-        addButton = addButtonFrame.findViewById(R.id.add_circle);
-        addButton.setOnClickListener(this);
-
-        label = view.findViewById(R.id.title_txt);
-        label.setText(table.getName());
-
-        recyclerView = view.findViewById(R.id.list);
-
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(manager);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        dataList.setLayoutManager(manager);
 
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), manager.getOrientation());
-        recyclerView.addItemDecoration(divider);
+        dataList.addItemDecoration(divider);
 
         if(table != null){
             new FillTableTask(table, this).execute();
@@ -83,37 +83,36 @@ public class TableDataFragment extends Fragment implements NameableListAdapter.N
 
     public void fillTableRow(Table filledTable){
         table = filledTable;
-        Log.d(MY_TAG, "fillTableRow: " + table.getRows());
-        NameableListAdapter<Row> adapter = new NameableListAdapter<>(table.getRows());
+        TableDataListAdapter adapter = new TableDataListAdapter(table.getRows(), table.getColumns(), bgColor, itemColor);
         adapter.setListener(this);
-        recyclerView.setAdapter(adapter);
+        dataList.setAdapter(adapter);
+        Log.d(MY_TAG, "fillTableRow: " + table.getRows());
     }
 
     @Override
-    public void onRowClick(int position) {
-        Row row = table.getRows().get(position);
-        Log.d(MY_TAG, "openRowDataFragment: ");
-        RowDataFragment rowDataFragment = RowDataFragment.getNewInstance(row);
+    public void openRowData(Row row, MyColor bgColor, MyColor itemColor) {
+        RowDataFragment fragment = RowDataFragment.getNewInstance(row);
+        fragment.setColors(bgColor, itemColor);
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, rowDataFragment)
+                .replace(R.id.container, fragment)
                 .addToBackStack("ROW_DATA")
                 .commit();
     }
 
-    @Override
-    public void onRowLongClick(int position) {
-
+    private void openRowDataEditFragment(Row row){
+        RowDataEditFragment fragment = RowDataEditFragment.getNewInstance(row, true);
+        fragment.setColors(bgColor, itemColor);
+        getFragmentManager().beginTransaction()
+                .add(R.id.container, fragment)
+                .addToBackStack("ROW_DATA_EDIT")
+                .commit();
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.add_circle){
-            //Toast.makeText(getContext(), "add circle clicked!", Toast.LENGTH_SHORT).show();
-            RowDataEditFragment rowDataEditFragment = RowDataEditFragment.getNewInstance(table.emptyRow(), table.getSchemaName(), table.getName(), true);
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, rowDataEditFragment)
-                    .addToBackStack("ROW_DATA_EDIT")
-                    .commit();
+        if(v.getId() == R.id.add_btn){
+            Row row = table.emptyRow();
+            openRowDataEditFragment(row);
         }
     }
 

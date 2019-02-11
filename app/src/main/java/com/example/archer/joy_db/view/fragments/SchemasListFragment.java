@@ -16,13 +16,15 @@ import android.view.ViewGroup;
 
 import com.example.archer.joy_db.R;
 import com.example.archer.joy_db.model.sql.Schema;
-import com.example.archer.joy_db.view.recViewAdapters.NameableListAdapter;
+import com.example.archer.joy_db.model.sql.Table;
+import com.example.archer.joy_db.view.MyColor;
+import com.example.archer.joy_db.view.recViewAdapters.SchemasListAdapter;
 
 import java.util.List;
 
 import static com.example.archer.joy_db.App.MY_TAG;
 
-public class SchemasListFragment extends Fragment implements NameableListAdapter.NameableListAdapterListener {
+public class SchemasListFragment extends Fragment implements SchemasListAdapter.SchemaListAdapterListener {
 
     private RecyclerView recyclerView;
     private Fragment previousFragment;
@@ -47,17 +49,14 @@ public class SchemasListFragment extends Fragment implements NameableListAdapter
 
         Log.d(MY_TAG, "SchemasList_Fragment onCreateView(): ");
 
-        View view = inflater.inflate(R.layout.list, container, false);
+        View view = inflater.inflate(R.layout.schemas_list, container, false);
 
-        recyclerView = view.findViewById(R.id.list);
+        recyclerView = view.findViewById(R.id.schemas_list);
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
 
-        DividerItemDecoration divider = new DividerItemDecoration(getContext(), manager.getOrientation());
-        recyclerView.addItemDecoration(divider);
-
-        NameableListAdapter<Schema> adapter = new NameableListAdapter(schemasList);
+        SchemasListAdapter adapter = new SchemasListAdapter(schemasList);
         adapter.setListener(this);
         recyclerView.setAdapter(adapter);
 
@@ -72,37 +71,22 @@ public class SchemasListFragment extends Fragment implements NameableListAdapter
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(MY_TAG, "SchemasList_Fragment onDestroy(): ");
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Log.d(MY_TAG, "SchemasList_Fragment onAttach(): ");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d(MY_TAG, "SchemasList_Fragment onDetach(): ");
-    }
-
-    @Override
-    public void onRowClick(int position) {
-        Schema schema = schemasList.get(position);
-
-        SchemaFragment schemaFragment = SchemaFragment.getNewInstance(schema);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.list_container, schemaFragment)
-                .addToBackStack("SCHEMA_" + schema.getName())
+    public void openTableData(Table table, MyColor schemaColor, MyColor tableColor) {
+        TableDataFragment tableDataFragment = TableDataFragment.getNewInstance(table);
+        tableDataFragment.setColors(schemaColor, tableColor);
+        getFragmentManager().beginTransaction()
+                .add(R.id.list_container, tableDataFragment)
+                .addToBackStack("FILLED_TABLE_" + table.getName())
                 .commit();
     }
 
     @Override
-    public void onRowLongClick(int position) {
-        //Nothing to do
+    public void openTableInformation(Table table, MyColor bgColor, MyColor itemColor) {
+        TableInformationFragment fragment = TableInformationFragment.getNewInstance(table);
+        fragment.setColors(bgColor, itemColor);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .addToBackStack("TABLE_INFORMATION")
+                .commit();
     }
-
 }

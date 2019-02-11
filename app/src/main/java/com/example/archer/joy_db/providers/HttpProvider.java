@@ -56,7 +56,9 @@ public class HttpProvider {
         if(response.isSuccessful()){
             return response.body().getSchemas();
         }else{
-            throw new Exception(response.errorBody().string());
+            String errorMsg = response.errorBody().string();
+            errorMsg = errorMsg.isEmpty() ? "Server error" : errorMsg;
+            throw new Exception(errorMsg);
         }
         //return getTESTSchemas();
     }
@@ -71,25 +73,25 @@ public class HttpProvider {
         }
     }
 
-    public String addRow(Row row, String schemaName, String tableName) throws IOException {
-        Call<MessageResponse> call = api.addRow(schemaName, tableName, row);
-        Response<MessageResponse> response = call.execute();
+    public Row addRow(Row row, String schemaName, String tableName) throws Exception {
+        Call<Row> call = api.addRow(schemaName, tableName, row);
+        Response<Row> response = call.execute();
         if(response.isSuccessful()){
-            return response.body().getMessage();
+            return response.body();
         }else{
             ErrorResponse error = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
-            return error.getError();
+            throw new Exception(error.getError());
         }
     }
 
-    public String updateRow(Row row, String schemaName, String tableName) throws IOException {
-        Call<MessageResponse> call = api.updateRow(schemaName, tableName, row);
-        Response<MessageResponse> response = call.execute();
+    public Row updateRow(Row row, String schemaName, String tableName) throws Exception {
+        Call<Row> call = api.updateRow(schemaName, tableName, row);
+        Response<Row> response = call.execute();
         if(response.isSuccessful()){
-            return response.body().getMessage();
+            return response.body();
         }else{
             ErrorResponse error = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
-            return error.getError();
+            throw new Exception(error.getError());
         }
     }
 

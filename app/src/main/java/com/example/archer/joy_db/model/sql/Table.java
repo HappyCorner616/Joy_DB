@@ -55,7 +55,7 @@ public class Table implements Nameable {
         return list;
     }
 
-    public boolean emptyRows(){
+    public boolean empty(){
         return rows.size() == 0;
     }
 
@@ -87,7 +87,17 @@ public class Table implements Nameable {
     public Row emptyRow(){
         List<Cell> cellList = new ArrayList<>();
         for(Column c : columns.values()){
-            cellList.add(new Cell(c, ""));
+            if(c.isNumeric()){
+                cellList.add(new Cell(c, 0D));
+            }else if(c.isLOB()){
+                cellList.add(new Cell(c, 0D));
+            }else if(c.isDate()){
+                cellList.add(new Cell(c, ""));
+            }else if(c.isString()){
+                cellList.add(new Cell(c, ""));
+            }else{
+                cellList.add(new Cell(c, ""));
+            }
         }
         Row row = new Row(cellList);
         return row;

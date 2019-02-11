@@ -1,45 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_data_prev"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/col_name"
+        android:id="@+id/col_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
         android:layout_weight="1"
-        android:hint="name"
         android:text=""
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/col_type"
+        android:id="@+id/col_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
         android:layout_weight="1"
-        android:hint="type"
         android:text=""
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/col_key"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_weight="1"
-        android:hint="key"
-        android:text=""
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/col_auto_increment"
+        android:id="@+id/col_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:hint="AI"
         android:text=""
         android:textSize="20sp" />
 </LinearLayout>

@@ -20,9 +20,9 @@ public interface Api {
     Call<Table> table(@Header("schemaName") String schemaName, @Header("tableName") String tableName, @Header("filled") boolean filled);
 
     @POST("Row")
-    Call<MessageResponse> addRow(@Header("schemaName") String schemaName, @Header("tableName") String tableName, @Body Row row);
+    Call<Row> addRow(@Header("schemaName") String schemaName, @Header("tableName") String tableName, @Body Row row);
 
     @PUT("Row")
-    Call<MessageResponse> updateRow(@Header("schemaName") String schemaName, @Header("tableName") String tableName, @Body Row row);
+    Call<Row> updateRow(@Header("schemaName") String schemaName, @Header("tableName") String tableName, @Body Row row);
 
 }
