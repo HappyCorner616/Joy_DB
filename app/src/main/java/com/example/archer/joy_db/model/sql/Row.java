@@ -1,14 +1,12 @@
 
 package com.example.archer.joy_db.model.sql;
 
-import com.example.archer.joy_db.model.interfaces.Nameable;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Row implements Nameable {
+public class Row{
 
     private List<Cell> cells;
 
@@ -60,7 +58,6 @@ public class Row implements Nameable {
         return list;
     }
 
-    @Override
     public String getName() {
        if(cells.size() == 0){
            return "()";
@@ -72,7 +69,5 @@ public class Row implements Nameable {
        }
        return "(" + cells.get(0).getColumn().getName() + ") " + cells.get(0).getVal();
     }
-
-
 
 }

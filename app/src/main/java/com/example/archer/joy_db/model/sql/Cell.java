@@ -1,12 +1,6 @@
 package com.example.archer.joy_db.model.sql;
 
-import android.view.inputmethod.EditorInfo;
-
-import com.example.archer.joy_db.model.interfaces.EditablePropertyable;
-
-import java.util.Date;
-
-public class Cell implements Comparable<Column>{
+public class Cell implements Comparable<Cell>{
 
     private Column column;
     private Object val;
@@ -17,7 +11,13 @@ public class Cell implements Comparable<Column>{
     }
 
     public void setVal(Object val) {
-        this.val = val;
+        if(getColumn().isInt()){
+            this.val = Integer.valueOf("" + val);
+        }else if(getColumn().isDecimal()){
+            this.val = Double.valueOf("" + val);
+        }else{
+            this.val = val;
+        }
     }
 
     public Column getColumn() {
@@ -44,6 +44,10 @@ public class Cell implements Comparable<Column>{
         }
     }
 
+    public Cell copy(){
+        return new Cell(column.copy(), val);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj == null) return false;
@@ -56,8 +60,8 @@ public class Cell implements Comparable<Column>{
     }
 
     @Override
-    public int compareTo(Column o) {
-        return this.column.compareTo(o);
+    public int compareTo(Cell c) {
+        return -this.column.compareTo(c.column);
     }
 
 }

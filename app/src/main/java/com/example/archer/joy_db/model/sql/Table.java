@@ -3,8 +3,6 @@ package com.example.archer.joy_db.model.sql;
 
 import android.util.Log;
 
-import com.example.archer.joy_db.model.interfaces.Nameable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.TreeMap;
 
 import static com.example.archer.joy_db.App.MY_TAG;
 
-public class Table implements Nameable {
+public class Table {
 
     private String schemaName;
     private String name;
@@ -39,7 +37,6 @@ public class Table implements Nameable {
         this.rows = new ArrayList<>();
     }
 
-    @Override
     public String getName(){
         return name;
     }
@@ -87,18 +84,21 @@ public class Table implements Nameable {
     public Row emptyRow(){
         List<Cell> cellList = new ArrayList<>();
         for(Column c : columns.values()){
-            if(c.isNumeric()){
-                cellList.add(new Cell(c, 0D));
+            if(c.isInt()) {
+                cellList.add(new Cell(c.copy(), 0));
+            }else if(c.isDecimal()){
+                cellList.add(new Cell(c.copy(), 0D));
             }else if(c.isLOB()){
-                cellList.add(new Cell(c, 0D));
+                cellList.add(new Cell(c.copy(), 0));
             }else if(c.isDate()){
-                cellList.add(new Cell(c, ""));
+                cellList.add(new Cell(c.copy(), ""));
             }else if(c.isString()){
-                cellList.add(new Cell(c, ""));
+                cellList.add(new Cell(c.copy(), ""));
             }else{
-                cellList.add(new Cell(c, ""));
+                cellList.add(new Cell(c.copy(), ""));
             }
         }
+        Collections.sort(cellList);
         Row row = new Row(cellList);
         return row;
     }

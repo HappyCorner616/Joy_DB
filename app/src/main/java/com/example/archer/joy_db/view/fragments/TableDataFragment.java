@@ -86,12 +86,12 @@ public class TableDataFragment extends Fragment implements TableDataListAdapter.
         TableDataListAdapter adapter = new TableDataListAdapter(table.getRows(), table.getColumns(), bgColor, itemColor);
         adapter.setListener(this);
         dataList.setAdapter(adapter);
-        Log.d(MY_TAG, "fillTableRow: " + table.getRows());
+        //Log.d(MY_TAG, "fillTableRow: " + table.getRows());
     }
 
     @Override
     public void openRowData(Row row, MyColor bgColor, MyColor itemColor) {
-        RowDataFragment fragment = RowDataFragment.getNewInstance(row);
+        RowDataFragment fragment = RowDataFragment.getNewInstance(row, table.getSchemaName(), table.getName());
         fragment.setColors(bgColor, itemColor);
         getFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment)
@@ -100,7 +100,7 @@ public class TableDataFragment extends Fragment implements TableDataListAdapter.
     }
 
     private void openRowDataEditFragment(Row row){
-        RowDataEditFragment fragment = RowDataEditFragment.getNewInstance(row, true);
+        RowDataEditFragment fragment = RowDataEditFragment.getNewInstance(row, true, table.getSchemaName(), table.getName());
         fragment.setColors(bgColor, itemColor);
         getFragmentManager().beginTransaction()
                 .add(R.id.container, fragment)

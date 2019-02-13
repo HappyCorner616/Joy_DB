@@ -56,6 +56,18 @@ public class Column implements Comparable<Column>{
         }
     }
 
+    public Column(String name, int position, int mainType, String type, boolean unsigned, int precision, int scale, String key, boolean autoIncrement) {
+        this.name = name;
+        this.position = position;
+        this.mainType = mainType;
+        this.type = type;
+        this.unsigned = unsigned;
+        this.precision = precision;
+        this.scale = scale;
+        this.key = key;
+        this.autoIncrement = autoIncrement;
+    }
+
     public int getMainType() {
         return mainType;
     }
@@ -104,7 +116,7 @@ public class Column implements Comparable<Column>{
 
     @Override
     public String toString() {
-        return "(" + type + ") " + name;
+        return  type + " " + name;
     }
 
     @Override
@@ -124,9 +136,17 @@ public class Column implements Comparable<Column>{
         return false;
     }
 
+    public Column copy(){
+        return new Column(name, position, mainType, type, unsigned, precision, scale, key, autoIncrement);
+    }
+
     @Override
     public int compareTo(Column o) {
-        return this.position - o.position;
+        if(isPK()){
+            return 1;
+        }else{
+            return this.position - o.position;
+        }
     }
 
     public static class PositionComparator implements Comparator<Column>{

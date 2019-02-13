@@ -47,8 +47,6 @@ public class SchemasListFragment extends Fragment implements SchemasListAdapter.
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Log.d(MY_TAG, "SchemasList_Fragment onCreateView(): ");
-
         View view = inflater.inflate(R.layout.schemas_list, container, false);
 
         recyclerView = view.findViewById(R.id.schemas_list);
@@ -67,7 +65,6 @@ public class SchemasListFragment extends Fragment implements SchemasListAdapter.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        Log.d(MY_TAG, "SchemasList_Fragment onCreate(): " + savedInstanceState);
     }
 
     @Override

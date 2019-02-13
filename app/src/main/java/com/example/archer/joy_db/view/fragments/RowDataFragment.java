@@ -11,24 +11,29 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.archer.joy_db.R;
 import com.example.archer.joy_db.model.sql.Row;
 import com.example.archer.joy_db.view.MyColor;
 import com.example.archer.joy_db.view.recViewAdapters.RowDataAdapter;
 
-public class RowDataFragment extends Fragment {
+public class RowDataFragment extends Fragment implements View.OnClickListener {
 
     private Row row;
     private MyColor bgColor, itemColor;
+    private String schemaName, tableName;
+    private View rowData;
     private RecyclerView cellsList;
-    private ConstraintLayout rowData;
+    private ImageView editBtn;
 
-    public static RowDataFragment getNewInstance(Row row){
+    public static RowDataFragment getNewInstance(Row row, String schemaName, String tableName){
         RowDataFragment fragment = new RowDataFragment();
         fragment.row = row;
         fragment.bgColor = MyColor.whiteColor();
         fragment.itemColor = MyColor.whiteColor();
+        fragment.schemaName = schemaName;
+        fragment.tableName = tableName;
         return fragment;
     }
 
@@ -50,8 +55,11 @@ public class RowDataFragment extends Fragment {
 
         cellsList = view.findViewById(R.id.cells_list);
         rowData = view.findViewById(R.id.row_data);
+        editBtn = view.findViewById(R.id.edit_btn);
 
         rowData.setBackgroundColor(bgColor.asInt());
+
+        editBtn.setOnClickListener(this);
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         cellsList.setLayoutManager(manager);
@@ -63,5 +71,22 @@ public class RowDataFragment extends Fragment {
         cellsList.setAdapter(adapter);
 
         return view;
+    }
+
+    private void openRowDtaaEditFragment(){
+        RowDataEditFragment fragment = RowDataEditFragment.getNewInstance(row, false, schemaName, tableName);
+        fragment.setColors(bgColor, itemColor);
+        getFragmentManager().beginTransaction()
+                .detach(this)
+                .replace(R.id.container, fragment)
+                .addToBackStack("ROW_DATA_EDIT")
+                .commit();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.edit_btn){
+            openRowDtaaEditFragment();
+        }
     }
 }

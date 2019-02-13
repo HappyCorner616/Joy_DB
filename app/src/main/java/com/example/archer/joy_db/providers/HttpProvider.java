@@ -1,5 +1,7 @@
 package com.example.archer.joy_db.providers;
 
+import android.util.Log;
+
 import com.example.archer.joy_db.model.ErrorResponse;
 import com.example.archer.joy_db.model.MessageResponse;
 import com.example.archer.joy_db.model.sql.Row;
@@ -18,6 +20,8 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.example.archer.joy_db.App.MY_TAG;
 
 public class HttpProvider {
 
@@ -38,8 +42,7 @@ public class HttpProvider {
                 .build();
 
         api = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                //.baseUrl(BASE_URL_AWS)
+                .baseUrl(BASE_URL_MOBILE)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build().create(Api.class);
@@ -51,12 +54,14 @@ public class HttpProvider {
     }
 
     public List<Schema> getSchemas() throws Exception {
+        Log.d(MY_TAG, "getSchemas start: ");
         Call<Schemas> call = api.schemas();
         Response<Schemas> response = call.execute();
         if(response.isSuccessful()){
             return response.body().getSchemas();
         }else{
             String errorMsg = response.errorBody().string();
+            Log.d(MY_TAG, "getSchemas error: " + errorMsg);
             errorMsg = errorMsg.isEmpty() ? "Server error" : errorMsg;
             throw new Exception(errorMsg);
         }
@@ -79,19 +84,20 @@ public class HttpProvider {
         if(response.isSuccessful()){
             return response.body();
         }else{
-            ErrorResponse error = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
-            throw new Exception(error.getError());
+            //ErrorResponse error = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
+            throw new Exception(response.errorBody().string());
         }
     }
 
     public Row updateRow(Row row, String schemaName, String tableName) throws Exception {
+        Log.d(MY_TAG, "updateRow: " + schemaName + "-" + tableName + "-(" + row.toString() + ")");
         Call<Row> call = api.updateRow(schemaName, tableName, row);
         Response<Row> response = call.execute();
         if(response.isSuccessful()){
             return response.body();
         }else{
-            ErrorResponse error = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
-            throw new Exception(error.getError());
+            //ErrorResponse error = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
+            throw new Exception(response.errorBody().string());
         }
     }
 
