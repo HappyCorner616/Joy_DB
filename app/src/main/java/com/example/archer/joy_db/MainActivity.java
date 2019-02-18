@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -15,6 +16,8 @@ import com.example.archer.joy_db.view.fragments.SchemasListFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.archer.joy_db.App.MY_TAG;
+
 public class MainActivity extends AppCompatActivity {
 
     private FrameLayout waitingFrame;
@@ -23,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Log.d(MY_TAG, "Main activity onCreate");
 
         waitingFrame = findViewById(R.id.waiting_frame);
 
@@ -42,8 +43,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showError(String error){
+        Log.d(MY_TAG, "showError: " + error);
         new AlertDialog.Builder(this)
                 .setTitle("Error")
+                .setMessage(error)
                 .setPositiveButton("Ok", null)
                 .create().show();
     }

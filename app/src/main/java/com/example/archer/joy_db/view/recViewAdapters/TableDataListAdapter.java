@@ -84,7 +84,7 @@ public class TableDataListAdapter extends RecyclerView.Adapter<TableDataListAdap
                 public void onClick(View v) {
                     if(listener != null){
                         Row row = list.get(getAdapterPosition() - 1);
-                        listener.openRowData(row, bgColor, rowColor);
+                        listener.rowDataClick(row, bgColor, rowColor);
                     }
                 }
             });
@@ -92,7 +92,7 @@ public class TableDataListAdapter extends RecyclerView.Adapter<TableDataListAdap
     }
 
     public interface TableDataListAdapterListener{
-        void openRowData(Row row, MyColor bgColor, MyColor itemColor);
+        void rowDataClick(Row row, MyColor bgColor, MyColor itemColor);
     }
 
 }

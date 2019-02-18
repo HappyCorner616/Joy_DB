@@ -22,18 +22,19 @@ import com.example.archer.joy_db.model.sql.Row;
 import com.example.archer.joy_db.model.sql.Table;
 import com.example.archer.joy_db.providers.HttpProvider;
 import com.example.archer.joy_db.view.MyColor;
+import com.example.archer.joy_db.view.interfaces.ITableDataFragment;
 import com.example.archer.joy_db.view.recViewAdapters.TableDataListAdapter;
 
 import static com.example.archer.joy_db.App.MY_TAG;
 
-public class TableDataFragment extends Fragment implements TableDataListAdapter.TableDataListAdapterListener, View.OnClickListener {
+public class TableDataFragment extends Fragment implements ITableDataFragment, TableDataListAdapter.TableDataListAdapterListener, View.OnClickListener {
 
-    private Table table;
+    protected Table table;
     private View tableData;
     private TextView tableTitle;
     private RecyclerView dataList;
     private ImageView addBtn;
-    private MyColor bgColor, itemColor;
+    protected MyColor bgColor, itemColor;
 
     public static TableDataFragment getNewInstance(Table table){
         TableDataFragment tableDataFragment = new TableDataFragment();
@@ -74,13 +75,18 @@ public class TableDataFragment extends Fragment implements TableDataListAdapter.
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), manager.getOrientation());
         dataList.addItemDecoration(divider);
 
-        if(table != null){
-            new FillTableTask(table, this).execute();
-        }
+        requestFilledTable(table);
 
         return view;
     }
 
+    public void requestFilledTable(Table table) {
+        if(table != null){
+            new FillTableTask(table, this).execute();
+        }
+    }
+
+    @Override
     public void fillTableRow(Table filledTable){
         table = filledTable;
         TableDataListAdapter adapter = new TableDataListAdapter(table.getRows(), table.getColumns(), bgColor, itemColor);
@@ -90,7 +96,7 @@ public class TableDataFragment extends Fragment implements TableDataListAdapter.
     }
 
     @Override
-    public void openRowData(Row row, MyColor bgColor, MyColor itemColor) {
+    public void rowDataClick(Row row, MyColor bgColor, MyColor itemColor) {
         RowDataFragment fragment = RowDataFragment.getNewInstance(row, table.getSchemaName(), table.getName());
         fragment.setColors(bgColor, itemColor);
         getFragmentManager().beginTransaction()
@@ -119,13 +125,20 @@ public class TableDataFragment extends Fragment implements TableDataListAdapter.
     class FillTableTask extends AsyncTask<Void, Void, String> {
 
         private Table table;
+        String schemaName, tableName;
         private boolean isSuccessful;
-        private TableDataFragment tableDataFragment;
+        private ITableDataFragment tableDataFragment;
 
-        public FillTableTask(Table table, TableDataFragment tableDataFragment) {
-            this.table = table;
+        public FillTableTask(String schemaName, String tableName, ITableDataFragment tableDataFragment) {
+            table = null;
+            this.schemaName = schemaName;
+            this.tableName = tableName;
             this.tableDataFragment = tableDataFragment;
             isSuccessful = true;
+        }
+
+        public FillTableTask(Table table, ITableDataFragment tableDataFragment) {
+            this(table.getSchemaName(), table.getName(), tableDataFragment);
         }
 
         @Override
@@ -136,7 +149,7 @@ public class TableDataFragment extends Fragment implements TableDataListAdapter.
         @Override
         protected String doInBackground(Void... voids) {
             try{
-                table = HttpProvider.getInstance().getTable(table.getSchemaName(), table.getName(), true);
+                table = HttpProvider.getInstance().getTable(schemaName, tableName, true);
                 return "Done";
             } catch (Exception e) {
                 e.printStackTrace();

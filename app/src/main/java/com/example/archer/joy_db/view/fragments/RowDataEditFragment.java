@@ -23,7 +23,7 @@ import com.example.archer.joy_db.view.recViewAdapters.RowDataEditAdapter;
 
 import static com.example.archer.joy_db.App.MY_TAG;
 
-public class RowDataEditFragment extends Fragment implements View.OnClickListener {
+public class RowDataEditFragment extends Fragment implements View.OnClickListener, RowDataEditAdapter.RowDataEditAdapterListener, RefSelectFragment.RefSelectFragmentListener {
 
     private Row row;
     private boolean isNew;
@@ -74,6 +74,7 @@ public class RowDataEditFragment extends Fragment implements View.OnClickListene
         cellsList.addItemDecoration(divider);
 
         RowDataEditAdapter adapter = new RowDataEditAdapter(row.getCells(), isNew, itemColor);
+        adapter.setListener(this);
         cellsList.setAdapter(adapter);
 
         return view;
@@ -95,7 +96,24 @@ public class RowDataEditFragment extends Fragment implements View.OnClickListene
         this.row = row;
         isNew = false;
         RowDataEditAdapter adapter = new RowDataEditAdapter(row.getCells(), isNew, itemColor);
+        adapter.setListener(this);
         cellsList.setAdapter(adapter);
+    }
+
+    @Override
+    public void searchRef(String refSchema, String refTable) {
+        RefSelectFragment fragment = RefSelectFragment.getNewInstance(refSchema, refTable);
+        fragment.setColors(bgColor, itemColor);
+        fragment.setListener(this);
+        getFragmentManager().beginTransaction()
+                .add(R.id.container, fragment)
+                .addToBackStack("REF_SELECT")
+                .commit();
+    }
+
+    @Override
+    public void getSelectedRow(Row row) {
+        ((RowDataEditAdapter)cellsList.getAdapter()).loadRefValue(row);
     }
 
     class AddRowTask extends AsyncTask<Void, Void, String>{

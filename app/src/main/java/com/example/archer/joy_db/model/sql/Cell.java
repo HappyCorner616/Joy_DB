@@ -3,21 +3,45 @@ package com.example.archer.joy_db.model.sql;
 public class Cell implements Comparable<Cell>{
 
     private Column column;
-    private Object val;
+    private int iVal;
+    private double dVal;
+    private String sVal;
+    private long lVal;
 
     public Cell(Column column, Object val) {
         this.column = column;
-        this.val = val;
+        setVal(val);
     }
 
     public void setVal(Object val) {
         if(getColumn().isInt()){
-            this.val = Integer.valueOf("" + val);
+            if(val instanceof String){
+                iVal = Integer.parseInt((String)val);
+            }else if(val instanceof Double){
+                iVal = ((Double)val).intValue();
+            }else if(val instanceof Integer){
+                iVal = (Integer)val;
+            }
         }else if(getColumn().isDecimal()){
-            this.val = Double.valueOf("" + val);
+            if(val instanceof String){
+                dVal = Double.parseDouble((String)val);
+            }else if(val instanceof Double){
+                dVal = (Double)val;
+            }else if(val instanceof Integer){
+                dVal = (Integer)val;
+            }
+        }else if(column.isLOB()){
+            if(val instanceof String){
+                lVal = Long.parseLong((String)val);
+            }else if(val instanceof Double){
+                lVal = ((Double)val).longValue();
+            }else if(val instanceof Long){
+                lVal = (Long)val;
+            }
         }else{
-            this.val = val;
+            this.sVal = String.valueOf(val);
         }
+
     }
 
     public Column getColumn() {
@@ -25,27 +49,27 @@ public class Cell implements Comparable<Cell>{
     }
 
     public Object getVal() {
-        return val;
+        if(column.isInt()){
+            return iVal;
+        }else if(column.isDecimal()){
+            return dVal;
+        }else if(column.isLOB()){
+            return lVal;
+        }else{
+            return sVal;
+        }
     }
 
     public int intVal(){
-        if(column.isInt()){
-            return ((Double)val).intValue();
-        }else{
-            return 0;
-        }
+        return iVal;
     }
 
     public double decVal(){
-        if(column.isDecimal() || column.isInt()){
-            return (Double)val;
-        }else{
-            return 0D;
-        }
+        return dVal;
     }
 
     public Cell copy(){
-        return new Cell(column.copy(), val);
+        return new Cell(column.copy(), getVal());
     }
 
     @Override
@@ -60,8 +84,13 @@ public class Cell implements Comparable<Cell>{
     }
 
     @Override
+    public String toString() {
+        return column.getName() + "-" + getVal();
+    }
+
+    @Override
     public int compareTo(Cell c) {
-        return -this.column.compareTo(c.column);
+        return this.column.compareTo(c.column);
     }
 
 }

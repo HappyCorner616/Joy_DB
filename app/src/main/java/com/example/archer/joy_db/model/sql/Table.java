@@ -110,4 +110,13 @@ public class Table {
         columns.put(c.getName(), c);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("'" + name + "'\n");
+        for(Row r : rows){
+            sb.append(r.toString() + "\n");
+        }
+        return sb.toString();
+    }
 }

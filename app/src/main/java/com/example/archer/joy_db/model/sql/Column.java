@@ -21,6 +21,9 @@ public class Column implements Comparable<Column>{
     private int scale;
     private String key;
     private boolean autoIncrement;
+    private String refSchemaName;
+    private String refTableName;
+    private String refColumnName;
 
     public Column(){
         name = "_error_";
@@ -33,13 +36,17 @@ public class Column implements Comparable<Column>{
         autoIncrement = false;
     }
 
-    public Column(String name, String type, String key, boolean autoIncrement, int position, int numericPrecision, int numericScale) {
+    public Column(String name, String type, String key, boolean autoIncrement, int position, int numericPrecision, int numericScale,
+                  String refSchemaName, String refTableName, String refColumnName) {
         this.name = name;
         this.type = type.split(" ")[0];
         this.key = key;
         this.autoIncrement = autoIncrement;
         this.position = position;
         unsigned = type.contains("unsigned");
+        this.refSchemaName = refSchemaName;
+        this.refTableName = refTableName;
+        this.refColumnName = refColumnName;
         if(type.contains("blob") || type.contains("longtext")){
             mainType = LOB;
         }else if(type.contains("bit") || type.contains("int")){
@@ -56,7 +63,7 @@ public class Column implements Comparable<Column>{
         }
     }
 
-    public Column(String name, int position, int mainType, String type, boolean unsigned, int precision, int scale, String key, boolean autoIncrement) {
+    public Column(String name, int position, int mainType, String type, boolean unsigned, int precision, int scale, String key, boolean autoIncrement, String refSchemaName, String refTableName, String refColumnName) {
         this.name = name;
         this.position = position;
         this.mainType = mainType;
@@ -66,6 +73,9 @@ public class Column implements Comparable<Column>{
         this.scale = scale;
         this.key = key;
         this.autoIncrement = autoIncrement;
+        this.refSchemaName = refSchemaName;
+        this.refTableName = refTableName;
+        this.refColumnName = refColumnName;
     }
 
     public int getMainType() {
@@ -100,23 +110,41 @@ public class Column implements Comparable<Column>{
         return autoIncrement;
     }
 
-    public String information(){
-        return type
-                + " " + (unsigned ? "unsigned" : "")
-                + " " + key;
+    public String information() {
+        return "Column{" + "name=" + name + ", position=" + position + ", mainType=" + mainType + ", type=" + type + ", unsigned=" + unsigned + ", precision=" + precision + ", scale=" + scale + ", key=" + key + ", autoIncrement=" + autoIncrement + ", refSchemaName=" + refSchemaName + ", refTableName=" + refTableName + ", refColumnName=" + refColumnName + '}';
     }
 
     public boolean isPK(){
         return key.equals("PRI");
     }
 
+    public boolean isRef(){
+        return key.equals("MUL");
+    }
+
     public boolean unsigned(){
         return unsigned;
+    }
+
+    public String getRefSchemaName() {
+        return refSchemaName;
+    }
+
+    public String getRefTableName() {
+        return refTableName;
+    }
+
+    public String getRefColumnName() {
+        return refColumnName;
     }
 
     @Override
     public String toString() {
         return  type + " " + name;
+    }
+
+    public String characteristic(){
+        return name + " " + mainType + "-" + type;
     }
 
     @Override
@@ -137,7 +165,8 @@ public class Column implements Comparable<Column>{
     }
 
     public Column copy(){
-        return new Column(name, position, mainType, type, unsigned, precision, scale, key, autoIncrement);
+        return new Column(name, position, mainType, type, unsigned, precision, scale, key, autoIncrement,
+                refSchemaName, refTableName, refColumnName);
     }
 
     @Override

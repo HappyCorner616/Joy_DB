@@ -3,15 +3,12 @@ package com.example.archer.joy_db.providers;
 import android.util.Log;
 
 import com.example.archer.joy_db.model.ErrorResponse;
-import com.example.archer.joy_db.model.MessageResponse;
 import com.example.archer.joy_db.model.sql.Row;
 import com.example.archer.joy_db.model.sql.Schema;
 import com.example.archer.joy_db.model.Schemas;
 import com.example.archer.joy_db.model.sql.Table;
 import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +39,7 @@ public class HttpProvider {
                 .build();
 
         api = new Retrofit.Builder()
-                .baseUrl(BASE_URL_MOBILE)
+                .baseUrl(BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build().create(Api.class);
@@ -60,12 +57,9 @@ public class HttpProvider {
         if(response.isSuccessful()){
             return response.body().getSchemas();
         }else{
-            String errorMsg = response.errorBody().string();
-            Log.d(MY_TAG, "getSchemas error: " + errorMsg);
-            errorMsg = errorMsg.isEmpty() ? "Server error" : errorMsg;
-            throw new Exception(errorMsg);
+            ErrorResponse errorResponse = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
+            throw new Exception(errorResponse.getError());
         }
-        //return getTESTSchemas();
     }
 
     public Table getTable(String schemaName, String tableName, boolean filled) throws Exception {
@@ -74,7 +68,8 @@ public class HttpProvider {
         if(response.isSuccessful()){
             return response.body();
         }else{
-            throw new Exception(response.errorBody().string());
+            ErrorResponse errorResponse = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
+            throw new Exception(errorResponse.getError());
         }
     }
 
@@ -84,8 +79,8 @@ public class HttpProvider {
         if(response.isSuccessful()){
             return response.body();
         }else{
-            //ErrorResponse error = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
-            throw new Exception(response.errorBody().string());
+            ErrorResponse errorResponse = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
+            throw new Exception(errorResponse.getError());
         }
     }
 
@@ -96,22 +91,9 @@ public class HttpProvider {
         if(response.isSuccessful()){
             return response.body();
         }else{
-            //ErrorResponse error = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
-            throw new Exception(response.errorBody().string());
+            ErrorResponse errorResponse = gson.fromJson(response.errorBody().string(), ErrorResponse.class);
+            throw new Exception(errorResponse.getError());
         }
-    }
-
-    // TEST
-    private static List<Schema> getTESTSchemas(){
-        List<Schema> list = new ArrayList<>();
-        list.add(new Schema("users"));
-        list.add(new Schema("people"));
-        list.add(new Schema("countries"));
-        list.add(new Schema("colors"));
-        list.add(new Schema("products"));
-        list.add(new Schema("dogs"));
-        list.add(new Schema("cats"));
-        return list;
     }
 
 }

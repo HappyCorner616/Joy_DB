@@ -36,6 +36,15 @@ public class Row{
         }
     }
 
+    public Object getVal(String columnName){
+        for(Cell c : cells){
+            if(c.getColumn().getName().equals(columnName)){
+                return c.getVal();
+            }
+        }
+        return null;
+    }
+
     public Set<Column> columns(){
         Set<Column> columns = new HashSet<>();
         for(Cell c : cells){
@@ -48,7 +57,7 @@ public class Row{
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for(Cell c : cells){
-            sb.append(c.getColumn().getName() + ": " + c.getVal() + "; ");
+            sb.append("[" + c.toString() + "]");
         }
         return sb.toString();
     }

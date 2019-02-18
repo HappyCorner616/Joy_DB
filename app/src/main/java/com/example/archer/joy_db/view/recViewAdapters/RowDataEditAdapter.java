@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.archer.joy_db.R;
@@ -30,6 +31,7 @@ public class RowDataEditAdapter extends RecyclerView.Adapter<RowDataEditAdapter.
     private MyColor cellColor;
     private Row unchangedRow;
     private RowDataEditViewHolder lastViewHolder;
+    private RowDataEditAdapterListener listener;
 
     public RowDataEditAdapter(List<Cell> list, boolean isNewRow, MyColor cellColor) {
         this.list = list;
@@ -41,6 +43,10 @@ public class RowDataEditAdapter extends RecyclerView.Adapter<RowDataEditAdapter.
         }
         unchangedRow = new Row(newList);
         lastViewHolder = null;
+    }
+
+    public void setListener(RowDataEditAdapterListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -83,8 +89,11 @@ public class RowDataEditAdapter extends RecyclerView.Adapter<RowDataEditAdapter.
         viewHolder.colVal.setText(String.valueOf(cell.getVal()));
         viewHolder.colName.setBackgroundColor(cellColor.asInt());
         viewHolder.colVal.setBackgroundColor(cellColor.asInt());
-
-        lastViewHolder = viewHolder;
+        if(cell.getColumn().isRef()){
+            viewHolder.searchBtn.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.searchBtn.setVisibility(View.GONE);
+        }
 
     }
 
@@ -99,11 +108,19 @@ public class RowDataEditAdapter extends RecyclerView.Adapter<RowDataEditAdapter.
         }
     }
 
-    class RowDataEditViewHolder extends RecyclerView.ViewHolder implements  View.OnFocusChangeListener {
+    public void loadRefValue(Row row){
+        if(lastViewHolder != null){
+            lastViewHolder.cell.setVal(row.getVal(lastViewHolder.cell.getColumn().getRefColumnName()));
+            lastViewHolder.colVal.setText(lastViewHolder.cell.getVal().toString());
+        }
+    }
+
+    class RowDataEditViewHolder extends RecyclerView.ViewHolder implements  View.OnFocusChangeListener, View.OnClickListener {
 
         Cell cell;
         TextView colName;
         EditText colVal;
+        ImageButton searchBtn;
         ConstraintLayout cellData;
 
         public RowDataEditViewHolder(@NonNull View itemView) {
@@ -111,14 +128,20 @@ public class RowDataEditAdapter extends RecyclerView.Adapter<RowDataEditAdapter.
             colName = itemView.findViewById(R.id.col_name);
             colVal = itemView.findViewById(R.id.col_val);
             cellData = itemView.findViewById(R.id.cell_data);
+            searchBtn = itemView.findViewById(R.id.search_btn);
 
             colVal.setOnFocusChangeListener(this);
+            searchBtn.setOnClickListener(this);
         }
 
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if(v.getId() == R.id.col_val && !hasFocus){
-                updateCellVal();
+            if(v.getId() == R.id.col_val){
+                if(hasFocus){
+                    lastViewHolder = this;
+                }else{
+                    updateCellVal();
+                }
             }
         }
 
@@ -126,5 +149,17 @@ public class RowDataEditAdapter extends RecyclerView.Adapter<RowDataEditAdapter.
             cell.setVal(colVal.getText().toString());
         }
 
+        @Override
+        public void onClick(View v) {
+            if(v.getId() == R.id.search_btn){
+                if(listener != null){
+                    listener.searchRef(cell.getColumn().getRefSchemaName(), cell.getColumn().getRefTableName());
+                }
+            }
+        }
+    }
+
+    public interface RowDataEditAdapterListener{
+        void searchRef(String refSchema, String refTable);
     }
 }
