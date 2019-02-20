@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.example.archer.joy_db.model.sql.Schema;
 import com.example.archer.joy_db.providers.HttpProvider;
-import com.example.archer.joy_db.view.fragments.SchemasListFragment;
+import com.example.archer.joy_db.view.schemas.SchemasListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         waitingFrame = findViewById(R.id.waiting_frame);
 
         if(savedInstanceState == null){
-            new GetSchemasTask().execute();
+            openSchemasListFragment();
         }
     }
 
@@ -55,51 +55,15 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
     }
 
-    void openSchemasListFragment(List<Schema> list){
-        SchemasListFragment schemasListFragment = SchemasListFragment.getNewInstance(list);
+    void openSchemasListFragment(){
+        SchemasListFragment schemasListFragment = SchemasListFragment.getNewInstance();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.list_container, schemasListFragment)
                 //.addToBackStack("SCHEMAS_LIST")
                 .commit();
     }
 
-    class GetSchemasTask extends AsyncTask<Void, Void, String>{
 
-        private List<Schema> list;
-        private boolean isSuccessful;
-
-        GetSchemasTask(){
-            list = new ArrayList<>();
-            isSuccessful = true;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            setWaitingMode();
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            try {
-                list = HttpProvider.getInstance().getSchemas();
-                return "Done";
-            } catch (Exception e) {
-                e.printStackTrace();
-                isSuccessful = false;
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            desetWaitingMode();
-            if(isSuccessful){
-                openSchemasListFragment(list);
-            }else{
-                showError(s);
-            }
-        }
-    }
 
 
 

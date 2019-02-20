@@ -1,9 +1,8 @@
-package com.example.archer.joy_db.view.fragments;
+package com.example.archer.joy_db.view.row;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +15,6 @@ import android.widget.ImageView;
 import com.example.archer.joy_db.R;
 import com.example.archer.joy_db.model.sql.Row;
 import com.example.archer.joy_db.view.MyColor;
-import com.example.archer.joy_db.view.recViewAdapters.RowDataAdapter;
 
 public class RowDataFragment extends Fragment implements View.OnClickListener {
 

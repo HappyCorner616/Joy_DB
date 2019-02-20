@@ -1,15 +1,13 @@
-package com.example.archer.joy_db.view.fragments;
+package com.example.archer.joy_db.view.table.data;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +20,9 @@ import com.example.archer.joy_db.model.sql.Row;
 import com.example.archer.joy_db.model.sql.Table;
 import com.example.archer.joy_db.providers.HttpProvider;
 import com.example.archer.joy_db.view.MyColor;
-import com.example.archer.joy_db.view.interfaces.ITableDataFragment;
-import com.example.archer.joy_db.view.recViewAdapters.TableDataListAdapter;
-
-import static com.example.archer.joy_db.App.MY_TAG;
+import com.example.archer.joy_db.view.row.RowDataEditFragment;
+import com.example.archer.joy_db.view.row.RowDataFragment;
+import com.example.archer.joy_db.view.table.interfaces.ITableDataFragment;
 
 public class TableDataFragment extends Fragment implements ITableDataFragment, TableDataListAdapter.TableDataListAdapterListener, View.OnClickListener {
 

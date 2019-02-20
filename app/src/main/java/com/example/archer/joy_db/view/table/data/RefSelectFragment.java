@@ -1,4 +1,4 @@
-package com.example.archer.joy_db.view.fragments;
+package com.example.archer.joy_db.view.table.data;
 
 
 import com.example.archer.joy_db.model.sql.Row;

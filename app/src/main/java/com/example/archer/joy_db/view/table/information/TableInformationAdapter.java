@@ -1,4 +1,4 @@
-package com.example.archer.joy_db.view.recViewAdapters;
+package com.example.archer.joy_db.view.table.information;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

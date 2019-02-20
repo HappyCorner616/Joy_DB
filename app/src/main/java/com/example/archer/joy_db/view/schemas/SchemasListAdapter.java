@@ -1,6 +1,5 @@
-package com.example.archer.joy_db.view.recViewAdapters;
+package com.example.archer.joy_db.view.schemas;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;

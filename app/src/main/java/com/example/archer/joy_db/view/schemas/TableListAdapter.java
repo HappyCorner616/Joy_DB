@@ -1,8 +1,7 @@
-package com.example.archer.joy_db.view.recViewAdapters;
+package com.example.archer.joy_db.view.schemas;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,6 @@ import com.example.archer.joy_db.model.sql.Table;
 import com.example.archer.joy_db.view.MyColor;
 
 import java.util.List;
-
-import static com.example.archer.joy_db.App.MY_TAG;
 
 public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.TableViewHolder> {
 

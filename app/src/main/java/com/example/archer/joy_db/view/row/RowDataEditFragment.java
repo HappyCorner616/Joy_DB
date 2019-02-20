@@ -1,4 +1,4 @@
-package com.example.archer.joy_db.view.fragments;
+package com.example.archer.joy_db.view.row;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ import com.example.archer.joy_db.R;
 import com.example.archer.joy_db.model.sql.Row;
 import com.example.archer.joy_db.providers.HttpProvider;
 import com.example.archer.joy_db.view.MyColor;
-import com.example.archer.joy_db.view.recViewAdapters.RowDataEditAdapter;
+import com.example.archer.joy_db.view.table.data.RefSelectFragment;
 
 import static com.example.archer.joy_db.App.MY_TAG;
 

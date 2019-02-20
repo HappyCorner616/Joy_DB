@@ -1,15 +1,12 @@
-package com.example.archer.joy_db.view.recViewAdapters;
+package com.example.archer.joy_db.view.row;
 
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -21,8 +18,6 @@ import com.example.archer.joy_db.view.MyColor;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.archer.joy_db.App.MY_TAG;
 
 public class RowDataEditAdapter extends RecyclerView.Adapter<RowDataEditAdapter.RowDataEditViewHolder> {
 

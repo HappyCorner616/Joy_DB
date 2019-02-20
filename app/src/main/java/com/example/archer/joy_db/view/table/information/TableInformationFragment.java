@@ -1,4 +1,4 @@
-package com.example.archer.joy_db.view.fragments;
+package com.example.archer.joy_db.view.table.information;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.example.archer.joy_db.R;
 import com.example.archer.joy_db.model.sql.Table;
 import com.example.archer.joy_db.view.MyColor;
-import com.example.archer.joy_db.view.recViewAdapters.TableInformationAdapter;
 
 public class TableInformationFragment extends Fragment {
 
